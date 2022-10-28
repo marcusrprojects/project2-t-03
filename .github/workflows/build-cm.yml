@@ -54,7 +54,7 @@ jobs:
         run: docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=root1234 -p 3306:3306 -d docker.io/library/mariadb:10.4
           
       - name: Wait for container to be active
-        run: sleep 35s      
+        run: sleep 45s      
          
       - name: Check to make sure DB is active
         run: mysql -uroot -h localhost -P 3306 --protocol=tcp -proot1234 -e 'SELECT version()'
