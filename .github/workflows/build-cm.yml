@@ -26,9 +26,6 @@ jobs:
     
       - name: Check out repository code
         uses: actions/checkout@v2
-        with:
-          ssh-key: '${{ secrets.SSH_PRIVATE_KEY }}'
-          ssh-known-hosts: 'github.ncsu.edu ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCy5K6oZoBJ881aKKkon5MB016unAgciPVqNAlFY6PWtbUd7qJEwbJJAtxZcY43UmB8x4SW8yjqLGeQDEjioDkYY/Ml58Sh+gzAdeMeloGI2uwgVw77bGvcREAZ8s/lpx3D48XtvbS/IU4CgOO7RcMFsOH0y4jVX0LDdDxKLVXu/mUxnrqB8d/NtaZjOeI1b38LxFpfF6RVD7MBC9xhuZUcofVLQMhZq+OZ85xBxqb8UV5Ujp5hPbjO2uBDf3F1G0VLZko8W6LIiJaeBrEVl2UhQR2NDX5w7sUPg9D9mRWDQvIws1C887XeyF84cxkshFzuqbbtnGPVDxNpjMnDoWsN'
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
@@ -45,19 +42,13 @@ jobs:
         run: cp CoffeeMaker/src/main/resources/application.yml.template CoffeeMaker/src/main/resources/application.yml
         
       - name: Edit config file with DB credentials (do not change this!)
-        run: sed -i 's/password\:/password\:\ root1234/g' CoffeeMaker/src/main/resources/application.yml
-          
-      - name: Clean up Docker containers
-        run: (docker stop $(docker ps -a -q) || true) && (docker rm $(docker ps -a -q) || true)
-            
-      - name: Set up MariaDB
-        run: docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=root1234 -p 3306:3306 -d docker.io/library/mariadb:10.4
-          
-      - name: Wait for container to be active
-        run: sleep 45s      
+        run: sed -i 's/password\:/password\:\ root1234/g' CoffeeMaker/src/main/resources/application.yml    
          
       - name: Check to make sure DB is active
         run: mysql -uroot -h localhost -P 3306 --protocol=tcp -proot1234 -e 'SELECT version()'
+        
+      - name: Drop old database to get a fresh state
+        run: mysql -uroot -h localhost -P 3306 --protocol=tcp -proot1234 -e 'DROP DATABASE IF EXISTS CoffeeMaker;'
       
       - name: Build CoffeeMaker with Maven
         run: cd CoffeeMaker && mvn --batch-mode --update-snapshots clean test checkstyle:checkstyle
