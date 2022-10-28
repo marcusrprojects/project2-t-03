@@ -56,3 +56,7 @@ target/*
 
 # Hibernate configuration with password
 src/main/resources/application.yml
+
+# IntelliJ
+/.idea/
+CoffeeMaker.iml
