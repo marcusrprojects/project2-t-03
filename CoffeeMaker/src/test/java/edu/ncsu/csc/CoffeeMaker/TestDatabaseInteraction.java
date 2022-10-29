@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@ExtendWith ( SpringExtension.class )
+@ExtendWith (SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest ( classes = TestConfig.class )
+@SpringBootTest (classes = TestConfig.class)
 public class TestDatabaseInteraction {
     @Autowired
     private RecipeService recipeService;
