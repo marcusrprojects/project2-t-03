@@ -112,6 +112,5 @@ public class TestDatabaseInteraction {
         
         Assertions.assertEquals(0, (int) recipeService.count());
         
-        
     }
 }
