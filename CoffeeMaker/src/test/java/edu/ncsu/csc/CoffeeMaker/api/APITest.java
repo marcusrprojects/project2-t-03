@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -78,4 +79,44 @@ public class APITest {
                 .content(TestUtils.asJsonString(350))).andExpect(status().isOk());
     }
 
+    @Test
+    @Transactional
+    public void testDeleteRecipe() throws Exception {
+        String recipe = mvc.perform(get("/api/v1/recipes")).andDo(print()).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        if (!recipe.contains("Mocha")) {
+            final Recipe r = new Recipe();
+            r.setChocolate(5);
+            r.setCoffee(3);
+            r.setMilk(4);
+            r.setSugar(8);
+            r.setPrice(10);
+            r.setName("Mocha");
+
+            mvc.perform(post("/api/v1/recipes").contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.asJsonString(r))).andExpect(status().isOk());
+        }
+
+        recipe = mvc.perform(get("/api/v1/recipes")).andDo(print()).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue(recipe.contains("Mocha"));
+
+        mvc.perform(delete("/api/v1/recipes/Mocha").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.asJsonString("Mocha"))).andDo(print()).andExpect(status().isOk());
+
+        recipe = mvc.perform(get("/api/v1/recipes")).andDo(print()).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertFalse(recipe.contains("Mocha"));
+
+        mvc.perform(delete("/api/v1/recipes/Mocha").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.asJsonString("Mocha"))).andDo(print()).andExpect(status().isNotFound());
+
+        recipe = mvc.perform(get("/api/v1/recipes/Mocha")).andDo(print()).andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue(recipe.contains("failed"));
+    }
 }
