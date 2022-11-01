@@ -147,6 +147,46 @@ public class InventoryTest {
         }
 
     }
+    
+    @Test
+    @Transactional
+    public void testChecks () {
+    	
+    	final Inventory ivt = inventoryService.getInventory();
+    	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkChocolate("-1");
+		}, "Cannot add negative amount of chocolate");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkChocolate("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkMilk("-1");
+		}, "Cannot add negative amount of milk");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkMilk("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkSugar("-1");
+		}, "Cannot add negative amount of sugar");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkSugar("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkCoffee("-1");
+		}, "Cannot add negative amount of chocolate");
+	
+	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkCoffee("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+	}
+
 
     @Test
     @Transactional
