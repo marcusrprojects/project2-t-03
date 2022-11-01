@@ -58,6 +58,7 @@ public class RecipeTest {
                 "Creating two recipes should result in two recipes in the database" );
 
         Assertions.assertEquals( r1, recipes.get( 0 ), "The retrieved recipe should match the created one" );
+        Assertions.assertEquals( false, r1.checkRecipe());
     }
 
     @Test
