@@ -150,11 +150,53 @@ public class InventoryTest {
 
     @Test
     @Transactional
-    public void testAddInventory5 () {
+    public void testChecks () {
         final Inventory ivt = inventoryService.getInventory();
 
+        
+//        ivt.addIngredients( 5, 3, 7, -2 );
+//        ivt.setChocolate(-1);
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkChocolate("-1");
+		}, "Cannot add negative amount of chocolate");
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkChocolate("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkMilk("-1");
+		}, "Cannot add negative amount of milk");
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkMilk("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkSugar("-1");
+		}, "Cannot add negative amount of sugar");
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkSugar("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkCoffee("-1");
+		}, "Cannot add negative amount of chocolate");
+        
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			ivt.checkCoffee("negative one");
+		}, "Cannot add a string that does not parse into an integer");
+    }
+    
+    @Test
+    @Transactional
+    public void testAddInventory5() {
+    	final Inventory ivt = inventoryService.getInventory();
+
         try {
-            ivt.addIngredients( 5, 3, 7, -2 );
+            ivt.addIngredients( 5, 3, 7, -2);
         }
         catch ( final IllegalArgumentException iae ) {
             Assertions.assertEquals( 500, (int) ivt.getCoffee(),
@@ -167,7 +209,6 @@ public class InventoryTest {
                     "Trying to update the Inventory with an invalid value for chocolate should result in no changes -- chocolate" );
 
         }
-
     }
 
 }
