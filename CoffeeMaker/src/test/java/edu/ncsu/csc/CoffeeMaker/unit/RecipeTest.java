@@ -272,6 +272,49 @@ public class RecipeTest {
         Assertions.assertEquals( 0, service.count(), "`service.deleteAll()` should remove everything" );
 
     }
+    
+    @Test
+    @Transactional
+    public void testUpdateRecipe() {
+
+    	final Recipe r1 = new Recipe();
+        r1.setName( "Black Coffee" );
+        r1.setPrice( 1 );
+        r1.setCoffee( 1 );
+        r1.setMilk( 0 );
+        r1.setSugar( 0 );
+        r1.setChocolate( 0 );
+        service.save( r1 );
+
+        Assertions.assertFalse(r1.checkRecipe(), "Recipe ingredient fields should not all be 0.");
+
+        final Recipe r2 = new Recipe();
+        r2.setName( "Mocha" );
+        r2.setPrice( 1 );
+        r2.setCoffee( 1 );
+        r2.setMilk( 1 );
+        r2.setSugar( 1 );
+        r2.setChocolate( 1 );
+        service.save( r2 );
+
+        r1.updateRecipe(r2);
+
+        Assertions.assertEquals(1,r1.getChocolate());
+
+        Assertions.assertEquals("Black Coffee", r1.toString());
+
+        r1.setName("Mocha");
+
+        Assertions.assertTrue(r1.equals(r2));
+
+        final List<Recipe> recipes = service.findAll();
+        Assertions.assertEquals( 2, recipes.size(),
+                "Creating two recipes should result in two recipes in the database" );
+
+        Assertions.assertEquals( r1, recipes.get( 0 ), "The retrieved recipe should match the created one" );
+
+
+    }
 
     @Test
     @Transactional
