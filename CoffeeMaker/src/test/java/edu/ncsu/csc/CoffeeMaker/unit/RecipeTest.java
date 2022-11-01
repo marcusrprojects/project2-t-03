@@ -58,6 +58,7 @@ public class RecipeTest {
                 "Creating two recipes should result in two recipes in the database" );
 
         Assertions.assertEquals( r1, recipes.get( 0 ), "The retrieved recipe should match the created one" );
+        Assertions.assertEquals( false, r1.checkRecipe());
     }
 
     @Test
@@ -336,6 +337,28 @@ public class RecipeTest {
         Assertions.assertEquals( 0, (int) retrieved.getChocolate() );
 
         Assertions.assertEquals( 1, service.count(), "Editing a recipe shouldn't duplicate it" );
+        
+        
+        final Recipe r2 = new Recipe();
+        r2.setName( "Mocha" );
+        r2.setPrice( 3 );
+        r2.setCoffee( 3 );
+        r2.setMilk( 1 );
+        r2.setSugar( 1 );
+        r2.setChocolate( 1 );
+        service.save( r2 );
+        r1.updateRecipe(r2);
+        
+        Assertions.assertEquals( 3, (int) retrieved.getPrice() );
+        Assertions.assertEquals( 3, (int) retrieved.getCoffee() );
+        Assertions.assertEquals( 1, (int) retrieved.getMilk() );
+        Assertions.assertEquals( 1, (int) retrieved.getSugar() );
+        Assertions.assertEquals( 1, (int) retrieved.getChocolate() );
+        
+        
+        
+        
+ 
 
     }
 

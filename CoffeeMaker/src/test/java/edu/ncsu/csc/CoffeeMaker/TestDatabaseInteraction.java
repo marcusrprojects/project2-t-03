@@ -60,5 +60,57 @@ public class TestDatabaseInteraction {
 
         Assertions.assertEquals(15, (int) recipeService.findAll().get(0).getPrice());
         Assertions.assertEquals(12, (int) recipeService.findAll().get(0).getSugar());
+        
+        Recipe r2 = new Recipe();
+
+        r2.setPrice(300);
+        r2.setName("Hot Chocolate");
+        r2.setCoffee(0);
+        r2.setSugar(2);
+        r2.setMilk(2);
+        r2.setChocolate(4);
+
+        recipeService.save(r2);
+        
+        Recipe r3 = new Recipe();
+
+        r3.setPrice(200);
+        r3.setName("Black Coffee");
+        r3.setCoffee(2);
+        r3.setSugar(0);
+        r3.setMilk(0);
+        r3.setChocolate(0);
+
+        recipeService.save(r3);
+        
+        dbRecipes = recipeService.findAll();
+
+        Assertions.assertEquals(3, dbRecipes.size());
+
+        Recipe dbRecipe1 = dbRecipes.get(0);
+        Recipe dbRecipe2 = dbRecipes.get(1);
+        Recipe dbRecipe3 = dbRecipes.get(2);
+        
+        recipeService.delete(dbRecipe2);
+        
+        dbRecipes = recipeService.findAll();
+        Assertions.assertEquals(2, dbRecipes.size());
+        
+        Assertions.assertEquals(200, (int) recipeService.findAll().get(1).getPrice());
+        Assertions.assertEquals("Mocha", recipeService.findAll().get(0).getName());
+        
+    	recipeService.delete(dbRecipe2);
+    	// Should not fail, but should not do anything.
+    	
+        dbRecipes = recipeService.findAll();
+        Assertions.assertEquals(2, dbRecipes.size());
+        
+        Assertions.assertEquals(200, (int) recipeService.findAll().get(1).getPrice());
+        Assertions.assertEquals("Mocha", recipeService.findAll().get(0).getName());
+        
+        recipeService.deleteAll();
+        
+        Assertions.assertEquals(0, (int) recipeService.count());
+        
     }
 }
