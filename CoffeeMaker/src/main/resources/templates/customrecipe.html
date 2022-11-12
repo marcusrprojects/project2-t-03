@@ -15,6 +15,9 @@ input.ng-dirty.ng-invalid-min {
 	background-color: yellow;
 }
 
+#ingredient-list-element {
+	padding: 20px 15px;
+}
 
 </style>
 <link rel="stylesheet" href="css/bootstrap.css" />
@@ -33,7 +36,7 @@ input.ng-dirty.ng-invalid-min {
 			$scope.reset = function() {
 				$scope.recipe = {
 					name : '',
-					price : ''
+					price : '',
 					ingredients : [
 					]
 				};
@@ -61,6 +64,48 @@ input.ng-dirty.ng-invalid-min {
 						});
 			}
 
+			$scope.selectOptions = [
+				"Coffee",
+                "Chocolate",
+                "Sugar",
+                "Milk",
+                "Oat Milk",
+                "Whipped Cream",
+                "Vanilla"
+    		];
+
+    		 $scope.ingredients = [
+    		 	{"id": 1,"type":"Coffee","amount":""}
+               ];
+
+			$scope.index = $scope.ingredients.length;
+
+  			$scope.addIngredientField = function() {
+    			var newItemNo = ++$scope.index;
+    			$scope.ingredients.push({'id':newItemNo, "type":"Coffee","amount":""});
+  			};
+
+  			$scope.removeIngredientField = function(id) {
+
+        			if($scope.ingredients.length<=1){
+            			alert("input cannot be less than 1");
+            			return;
+        			}
+
+        			var index = -1;
+    				var comArr = eval($scope.ingredients);
+    				for(var i = 0; i < comArr.length; i++) {
+    					if(comArr[i].id === id) {
+    						index = i;
+    						break;
+    					}
+    				}
+    				if( index === -1 ) {
+    					alert("Something went wrong");
+    				}
+    				$scope.ingredients.splice(index, 1);
+  			};
+
 			$scope.reset();
 
 		});
@@ -69,7 +114,7 @@ input.ng-dirty.ng-invalid-min {
 
 
 
-	<div ng-app="myApp" class="generic-container ng-cloak"
+	<div ng-app="myApp" class="generic-container"
 		ng-controller="addRecipeCtrl as ctrl">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -106,25 +151,44 @@ input.ng-dirty.ng-invalid-min {
 									placeholder="Enter recipe price" required="0" min="0"/>
 								<div class="has-error" ng-show="addRecipeForm.$dirty">
 									<span ng-show="addRecipeForm.price.$error.required">This
-										is a required field</span> <span
+										is a required field.</span> <span
 										ng-show="addRecipeForm.price.$error.min">Minimum amount
-										is 0</span> <span ng-show="addRecipeForm.price.$invalid">This
-										field is invalid </span>
+										is 0.</span> <span ng-show="addRecipeForm.price.$invalid">This
+										field is invalid.</span>
 								</div>
 							</div>
 						</div>
 					</div>
 
 					<div class="row">
+						<label class="col-md-12 control-lable" for="file">Ingredients</label>
+					</div>
+
+					<div class="row">
 						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Price</label>
-							<div class="col-md-7">
-								<label for="ingredients"></label>
-								<select name="ingredients" id="ingredients" required>
-									<option>Coffee</option>
-									<option>Milk</option>
-								</select>
-							</div>
+							<label class="col-md-12 control-lable" for="file">
+								<ul class="list-group">
+									<li class="list-group-item" id="ingredient-list-element" data-ng-repeat="ingredient in ingredients">
+										<div class="col-md-2">
+											<select class="form-control" ng-model="ingredient.type" ng-options="item for item in selectOptions">
+											</select>
+										</div>
+										<div class="col-md-7">
+											<input class="form-control" type="number" ng-model="ingredient.amount" name="amount"
+												   placeholder="Enter ingredient amount" required min="0"/>
+											<div class="has-error" ng-show="addRecipeForm.$dirty">
+												<span ng-show="addRecipeForm.amount.$error.required">This
+													is a required field.</span> <span
+													ng-show="addRecipeForm.amount.$error.min">Minimum amount
+													is 0.</span> <span ng-show="addRecipeForm.amount.$invalid">This
+													field is invalid.</span>
+											</div>
+										</div>
+										<button class="btn btn-danger" ng-click="removeIngredientField(ingredient.id)" ng-if="ingredient.id!=index">-</button>
+										<button class="btn btn-danger" ng-click="addIngredientField()" ng-if="ingredient.id===index">+</button>
+									</li>
+								</ul>
+							</label>
 						</div>
 					</div>
 
