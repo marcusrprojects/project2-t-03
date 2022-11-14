@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+x<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Add a Custom Recipe</title>
@@ -106,6 +106,10 @@ input.ng-dirty.ng-invalid-min {
     				$scope.ingredients.splice(index, 1);
   			};
 
+  			$scope.changeValue = function() {
+  				console.log($scope)
+  			}
+
 			$scope.reset();
 
 		});
@@ -174,13 +178,13 @@ input.ng-dirty.ng-invalid-min {
 											</select>
 										</div>
 										<div class="col-md-7">
-											<input class="form-control" type="number" ng-model="ingredient.amount" name="amount"
-												   placeholder="Enter ingredient amount" required min="0"/>
+											<input class="form-control" type="number" ng-model="ingredient[ingredient.type].amount" name="{{ingredient.type}}"
+												   placeholder="Enter ingredient amount" required min="0" ng-change="changeValue()"/>
 											<div class="has-error" ng-show="addRecipeForm.$dirty">
-												<span ng-show="addRecipeForm.amount.$error.required">This
+												<span ng-show="addRecipeForm.{{ingredient.type}}.$error.required">This
 													is a required field.</span> <span
-													ng-show="addRecipeForm.amount.$error.min">Minimum amount
-													is 0.</span> <span ng-show="addRecipeForm.amount.$invalid">This
+													ng-show="addRecipeForm.{{ingredient.type}}.$error.min">Minimum amount
+													is 0.</span> <span ng-show="addRecipeForm.{{ingredient.type}}.$invalid">This
 													field is invalid.</span>
 											</div>
 										</div>
