@@ -78,6 +78,19 @@ public class MappingController {
     public String editRecipeForm ( final Model model ) {
         return "editrecipe";
     }
+    
+    /**
+     * On a GET request to /addingredient, the IngredientController will return
+     * /src/main/resources/templates/addingredient.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/ingredient", "/addingredient.html" } )
+    public String addIngredientPage ( final Model model ) {
+        return "addingredient";
+    }
 
     /**
      * Handles a GET request for inventory. The GET request provides a view to
