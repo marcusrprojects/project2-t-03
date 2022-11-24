@@ -1,5 +1,6 @@
 package edu.ncsu.csc.CoffeeMaker.controllers;
 
+import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +15,14 @@ import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 /**
  * This is the controller that holds the REST endpoints that handle add and
  * update operations for the Inventory.
- *
+ * <p>
  * Spring will automatically convert all of the ResponseEntity and List results
  * to JSON
  *
  * @author Kai Presler-Marshall
  * @author Michelle Lemons
- *
  */
-@SuppressWarnings ( { "unchecked", "rawtypes" } )
+@SuppressWarnings({"unchecked", "rawtypes"})
 @RestController
 public class APIInventoryController extends APIController {
 
@@ -39,10 +39,10 @@ public class APIInventoryController extends APIController {
      *
      * @return response to the request
      */
-    @GetMapping ( BASE_PATH + "/inventory" )
-    public ResponseEntity getInventory () {
+    @GetMapping(BASE_PATH + "/inventory")
+    public ResponseEntity getInventory() {
         final Inventory inventory = service.getInventory();
-        return new ResponseEntity( inventory, HttpStatus.OK );
+        return new ResponseEntity(inventory, HttpStatus.OK);
     }
 
     /**
@@ -50,16 +50,15 @@ public class APIInventoryController extends APIController {
      * Inventory. This will update the Inventory of the CoffeeMaker by adding
      * amounts from the Inventory provided to the CoffeeMaker's stored inventory
      *
-     * @param inventory
-     *            amounts to add to inventory
+     * @param inventory amounts to add to inventory
      * @return response to the request
      */
-    @PutMapping ( BASE_PATH + "/inventory" )
-    public ResponseEntity updateInventory ( @RequestBody final Inventory inventory ) {
+    @PutMapping(BASE_PATH + "/inventory")
+    public ResponseEntity updateInventory(@RequestBody final Inventory inventory) {
         final Inventory inventoryCurrent = service.getInventory();
-        inventoryCurrent.addIngredients( inventory.getCoffee(), inventory.getMilk(), inventory.getSugar(),
-                inventory.getChocolate() );
-        service.save( inventoryCurrent );
-        return new ResponseEntity( inventoryCurrent, HttpStatus.OK );
+        inventoryCurrent.addIngredients(inventory.getIngredient(IngredientType.COFFEE), inventory.getIngredient(IngredientType.MILK),
+                inventory.getIngredient(IngredientType.SUGAR), inventory.getIngredient(IngredientType.CHOCOLATE));
+        service.save(inventoryCurrent);
+        return new ResponseEntity(inventoryCurrent, HttpStatus.OK);
     }
 }
