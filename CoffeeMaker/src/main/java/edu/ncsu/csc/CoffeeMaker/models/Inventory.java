@@ -33,7 +33,7 @@ public class Inventory extends DomainObject {
      * list of Ingredients in inventory
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Ingredient> ingredients;
+    private final List<Ingredient> ingredients;
 
     /**
      * Empty constructor for Hibernate

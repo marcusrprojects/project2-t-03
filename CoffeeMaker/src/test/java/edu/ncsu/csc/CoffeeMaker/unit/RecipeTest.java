@@ -291,6 +291,8 @@ public class RecipeTest {
 
         r1.setName("Mocha");
 
+        service.save(r1);
+
         Assertions.assertTrue(r1.equals(r2));
 
         final List<Recipe> recipes = service.findAll();
