@@ -33,7 +33,7 @@ public class Inventory extends DomainObject {
      * list of Ingredients in inventory
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private final List<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
 
     /**
      * Empty constructor for Hibernate
@@ -96,6 +96,15 @@ public class Inventory extends DomainObject {
     }
 
     /**
+     * Returns the entire list of Ingredients in the inventory
+     *
+     * @return the list of Ingredients
+     */
+    public List<Ingredient> getIngredients() {
+        return this.ingredients;
+    }
+
+    /**
      * Sets the number of units of the requested ingredient in the inventory to the specified amount.
      *
      * @param ingredientType the type of the ingredient to set
@@ -110,6 +119,15 @@ public class Inventory extends DomainObject {
         }
 
         this.ingredients.add(new Ingredient(ingredientType, amt));
+    }
+
+    /**
+     * Sets an entire new list of Ingredients in the inventory, replacing the existing one.
+     *
+     * @param ingredients the list to replace it with
+     */
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
     /**
