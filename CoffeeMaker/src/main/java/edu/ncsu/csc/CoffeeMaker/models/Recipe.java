@@ -153,7 +153,8 @@ public class Recipe extends DomainObject {
             if (this.getIngredient(ingredient.getIngredient()) != null) {
                 this.getIngredient(ingredient.getIngredient()).setAmount(ingredient.getAmount());
             } else {
-                this.addIngredient(ingredient);
+                Ingredient newIngredient = new Ingredient(ingredient.getIngredient(), ingredient.getAmount());
+                this.addIngredient(newIngredient);
             }
         }
 
