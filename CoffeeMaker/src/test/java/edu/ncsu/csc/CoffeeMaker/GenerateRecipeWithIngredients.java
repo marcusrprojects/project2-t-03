@@ -13,6 +13,7 @@ import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
+import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
@@ -29,6 +30,7 @@ public class GenerateRecipeWithIngredients {
 
 
     @Test
+    @Transactional
     public void createRecipe() {
         final Recipe r1 = new Recipe();
         r1.setName("Delicious Coffee");

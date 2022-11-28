@@ -1,5 +1,7 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
+import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -69,6 +71,21 @@ public class Recipe extends DomainObject {
     }
 
     /**
+     * Gets an Ingredient in the Recipe
+     * @param ingredientType the type of the Ingredient desired
+     * @return desired Ingredient in the Recipe, or null if it's not in the recipe
+     */
+    public Ingredient getIngredient(IngredientType ingredientType) {
+        for (Ingredient ingredient : this.ingredients) {
+            if (ingredient.getIngredient() == ingredientType) {
+                return ingredient;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get the ID of the Recipe
      *
      * @return the ID
@@ -131,6 +148,16 @@ public class Recipe extends DomainObject {
      */
     public void updateRecipe(final Recipe r) {
         setPrice(r.getPrice());
+
+        for (Ingredient ingredient : r.getIngredients()) {
+            if (this.getIngredient(ingredient.getIngredient()) != null) {
+                this.getIngredient(ingredient.getIngredient()).setAmount(ingredient.getAmount());
+            } else {
+                Ingredient newIngredient = new Ingredient(ingredient.getIngredient(), ingredient.getAmount());
+                this.addIngredient(newIngredient);
+            }
+        }
+
     }
 
     /**

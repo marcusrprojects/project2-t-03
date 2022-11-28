@@ -1,5 +1,7 @@
 package edu.ncsu.csc.CoffeeMaker.unit;
 
+import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
+import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.junit.jupiter.api.Assertions;
 import edu.ncsu.csc.CoffeeMaker.TestConfig;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
@@ -30,10 +32,10 @@ public class InventoryTest {
 	public void setup() {
 		final Inventory ivt = inventoryService.getInventory();
 
-		ivt.setChocolate(500);
-		ivt.setCoffee(500);
-		ivt.setMilk(500);
-		ivt.setSugar(500);
+		ivt.setIngredient(IngredientType.CHOCOLATE, 500);
+		ivt.setIngredient(IngredientType.COFFEE, 500);
+		ivt.setIngredient(IngredientType.MILK, 500);
+		ivt.setIngredient(IngredientType.SUGAR, 500);
 
 		inventoryService.save(ivt);
 	}
@@ -45,10 +47,10 @@ public class InventoryTest {
 
 		final Recipe recipe = new Recipe();
 		recipe.setName("Delicious Not-Coffee");
-		recipe.setChocolate(10);
-		recipe.setMilk(20);
-		recipe.setSugar(5);
-		recipe.setCoffee(1);
+		recipe.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 10));
+		recipe.addIngredient(new Ingredient(IngredientType.MILK, 20));
+		recipe.addIngredient(new Ingredient(IngredientType.SUGAR, 5));
+		recipe.addIngredient(new Ingredient(IngredientType.COFFEE, 1));
 
 		recipe.setPrice(5);
 
@@ -58,10 +60,10 @@ public class InventoryTest {
 		 * Make sure that all of the inventory fields are now properly updated
 		 */
 
-		Assertions.assertEquals(490, (int) i.getChocolate());
-		Assertions.assertEquals(480, (int) i.getMilk());
-		Assertions.assertEquals(495, (int) i.getSugar());
-		Assertions.assertEquals(499, (int) i.getCoffee());
+		Assertions.assertEquals(490, (int) i.getIngredient(IngredientType.CHOCOLATE));
+		Assertions.assertEquals(480, (int) i.getIngredient(IngredientType.MILK));
+		Assertions.assertEquals(495, (int) i.getIngredient(IngredientType.SUGAR));
+		Assertions.assertEquals(499, (int) i.getIngredient(IngredientType.COFFEE));
 	}
 
 	@Test
@@ -76,13 +78,13 @@ public class InventoryTest {
 
 		ivt = inventoryService.getInventory();
 
-		Assertions.assertEquals(505, (int) ivt.getCoffee(),
+		Assertions.assertEquals(505, (int) ivt.getIngredient(IngredientType.COFFEE),
 				"Adding to the inventory should result in correctly-updated values for coffee");
-		Assertions.assertEquals(503, (int) ivt.getMilk(),
+		Assertions.assertEquals(503, (int) ivt.getIngredient(IngredientType.MILK),
 				"Adding to the inventory should result in correctly-updated values for milk");
-		Assertions.assertEquals(507, (int) ivt.getSugar(),
+		Assertions.assertEquals(507, (int) ivt.getIngredient(IngredientType.SUGAR),
 				"Adding to the inventory should result in correctly-updated values sugar");
-		Assertions.assertEquals(502, (int) ivt.getChocolate(),
+		Assertions.assertEquals(502, (int) ivt.getIngredient(IngredientType.CHOCOLATE),
 				"Adding to the inventory should result in correctly-updated values chocolate");
 
 	}
@@ -95,13 +97,13 @@ public class InventoryTest {
 		try {
 			ivt.addIngredients(-5, 3, 7, 2);
 		} catch (final IllegalArgumentException iae) {
-			Assertions.assertEquals(500, (int) ivt.getCoffee(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.COFFEE),
 					"Trying to update the Inventory with an invalid value for coffee should result in no changes -- coffee");
-			Assertions.assertEquals(500, (int) ivt.getMilk(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.MILK),
 					"Trying to update the Inventory with an invalid value for coffee should result in no changes -- milk");
-			Assertions.assertEquals(500, (int) ivt.getSugar(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.SUGAR),
 					"Trying to update the Inventory with an invalid value for coffee should result in no changes -- sugar");
-			Assertions.assertEquals(500, (int) ivt.getChocolate(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.CHOCOLATE),
 					"Trying to update the Inventory with an invalid value for coffee should result in no changes -- chocolate");
 		}
 	}
@@ -114,13 +116,13 @@ public class InventoryTest {
 		try {
 			ivt.addIngredients(5, -3, 7, 2);
 		} catch (final IllegalArgumentException iae) {
-			Assertions.assertEquals(500, (int) ivt.getCoffee(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.COFFEE),
 					"Trying to update the Inventory with an invalid value for milk should result in no changes -- coffee");
-			Assertions.assertEquals(500, (int) ivt.getMilk(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.MILK),
 					"Trying to update the Inventory with an invalid value for milk should result in no changes -- milk");
-			Assertions.assertEquals(500, (int) ivt.getSugar(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.SUGAR),
 					"Trying to update the Inventory with an invalid value for milk should result in no changes -- sugar");
-			Assertions.assertEquals(500, (int) ivt.getChocolate(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.CHOCOLATE),
 					"Trying to update the Inventory with an invalid value for milk should result in no changes -- chocolate");
 
 		}
@@ -135,13 +137,13 @@ public class InventoryTest {
 		try {
 			ivt.addIngredients(5, 3, -7, 2);
 		} catch (final IllegalArgumentException iae) {
-			Assertions.assertEquals(500, (int) ivt.getCoffee(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.COFFEE),
 					"Trying to update the Inventory with an invalid value for sugar should result in no changes -- coffee");
-			Assertions.assertEquals(500, (int) ivt.getMilk(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.MILK),
 					"Trying to update the Inventory with an invalid value for sugar should result in no changes -- milk");
-			Assertions.assertEquals(500, (int) ivt.getSugar(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.SUGAR),
 					"Trying to update the Inventory with an invalid value for sugar should result in no changes -- sugar");
-			Assertions.assertEquals(500, (int) ivt.getChocolate(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.CHOCOLATE),
 					"Trying to update the Inventory with an invalid value for sugar should result in no changes -- chocolate");
 
 		}
@@ -155,35 +157,35 @@ public class InventoryTest {
     	final Inventory ivt = inventoryService.getInventory();
     	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkChocolate("-1");
+			ivt.checkIngredient(IngredientType.CHOCOLATE, "-1");
 		}, "Cannot add negative amount of chocolate");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkChocolate("negative one");
+			ivt.checkIngredient(IngredientType.CHOCOLATE, "negative one");
 		}, "Cannot add a string that does not parse into an integer");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkMilk("-1");
+			ivt.checkIngredient(IngredientType.MILK, "-1");
 		}, "Cannot add negative amount of milk");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkMilk("negative one");
+			ivt.checkIngredient(IngredientType.MILK, "negative one");
 		}, "Cannot add a string that does not parse into an integer");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkSugar("-1");
+			ivt.checkIngredient(IngredientType.SUGAR, "-1");
 		}, "Cannot add negative amount of sugar");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkSugar("negative one");
+			ivt.checkIngredient(IngredientType.SUGAR, "negative one");
 		}, "Cannot add a string that does not parse into an integer");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkCoffee("-1");
+			ivt.checkIngredient(IngredientType.COFFEE, "-1");
 		}, "Cannot add negative amount of chocolate");
 	
 	    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ivt.checkCoffee("negative one");
+			ivt.checkIngredient(IngredientType.COFFEE, "negative one");
 		}, "Cannot add a string that does not parse into an integer");
 	}
 
@@ -195,13 +197,13 @@ public class InventoryTest {
 		try {
 			ivt.addIngredients(5, 3, 7, -2);
 		} catch (final IllegalArgumentException iae) {
-			Assertions.assertEquals(500, (int) ivt.getCoffee(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.COFFEE),
 					"Trying to update the Inventory with an invalid value for chocolate should result in no changes -- coffee");
-			Assertions.assertEquals(500, (int) ivt.getMilk(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.MILK),
 					"Trying to update the Inventory with an invalid value for chocolate should result in no changes -- milk");
-			Assertions.assertEquals(500, (int) ivt.getSugar(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.SUGAR),
 					"Trying to update the Inventory with an invalid value for chocolate should result in no changes -- sugar");
-			Assertions.assertEquals(500, (int) ivt.getChocolate(),
+			Assertions.assertEquals(500, (int) ivt.getIngredient(IngredientType.CHOCOLATE),
 					"Trying to update the Inventory with an invalid value for chocolate should result in no changes -- chocolate");
 
 		}
@@ -217,60 +219,60 @@ public class InventoryTest {
 		Assertions.assertEquals((long) (2), (long) ivt.getId());
 		// Chocolate
 		try {
-			ivt.setChocolate(ivt.checkChocolate("-5"));
+			ivt.setIngredient(IngredientType.CHOCOLATE, ivt.checkIngredient(IngredientType.CHOCOLATE, "-5"));
 			Assertions.fail("should fail as cannot set to a negative int");
 		} catch (IllegalArgumentException e) {
-			ivt.setChocolate(ivt.checkChocolate("5"));
+			ivt.setIngredient(IngredientType.CHOCOLATE, ivt.checkIngredient(IngredientType.CHOCOLATE, "5"));
 		}
 		try {
-			ivt.setChocolate(ivt.checkChocolate("five"));
+			ivt.setIngredient(IngredientType.CHOCOLATE, ivt.checkIngredient(IngredientType.CHOCOLATE, "five"));
 			Assertions.fail("should fail as cannot set to a string");
 		} catch (IllegalArgumentException e) {
-			ivt.setChocolate(ivt.checkChocolate("5"));
+			ivt.setIngredient(IngredientType.CHOCOLATE, ivt.checkIngredient(IngredientType.CHOCOLATE, "5"));
 		}
-		Assertions.assertEquals(5, (int) ivt.getChocolate());
+		Assertions.assertEquals(5, (int) ivt.getIngredient(IngredientType.CHOCOLATE));
 		// Coffee
 		try {
-			ivt.setChocolate(ivt.checkCoffee("-5"));
+			ivt.setIngredient(IngredientType.COFFEE, ivt.checkIngredient(IngredientType.COFFEE, "-5"));
 			Assertions.fail("should fail as cannot set to a negative int");
 		} catch (IllegalArgumentException e) {
-			ivt.setCoffee(ivt.checkCoffee("5"));
+			ivt.setIngredient(IngredientType.COFFEE, ivt.checkIngredient(IngredientType.COFFEE, "5"));
 		}
 		try {
-			ivt.setCoffee(ivt.checkCoffee("five"));
+			ivt.setIngredient(IngredientType.COFFEE, ivt.checkIngredient(IngredientType.COFFEE, "five"));
 			Assertions.fail("should fail as cannot set to a string");
 		} catch (IllegalArgumentException e) {
-			ivt.setCoffee(ivt.checkCoffee("5"));
+			ivt.setIngredient(IngredientType.COFFEE, ivt.checkIngredient(IngredientType.COFFEE, "5"));
 		}
-		Assertions.assertEquals(5, (int) ivt.getCoffee());
+		Assertions.assertEquals(5, (int) ivt.getIngredient(IngredientType.COFFEE));
 		// Milk
 		try {
-			ivt.setMilk(ivt.checkMilk("-5"));
+			ivt.setIngredient(IngredientType.MILK, ivt.checkIngredient(IngredientType.MILK, "-5"));
 			Assertions.fail("should fail as cannot set to a negative int");
 		} catch (IllegalArgumentException e) {
-			ivt.setMilk(ivt.checkMilk("5"));
+			ivt.setIngredient(IngredientType.MILK, ivt.checkIngredient(IngredientType.MILK, "5"));
 		}
 		try {
-			ivt.setMilk(ivt.checkMilk("five"));
+			ivt.setIngredient(IngredientType.MILK, ivt.checkIngredient(IngredientType.MILK, "five"));
 			Assertions.fail("should fail as cannot set to a string");
 		} catch (IllegalArgumentException e) {
-			ivt.setMilk(ivt.checkMilk("5"));
+			ivt.setIngredient(IngredientType.MILK, ivt.checkIngredient(IngredientType.MILK, "5"));
 		}
-		Assertions.assertEquals(5, (int) ivt.getMilk());
+		Assertions.assertEquals(5, (int) ivt.getIngredient(IngredientType.MILK));
 		// Sugar
 		try {
-			ivt.setSugar(ivt.checkSugar("-5"));
+			ivt.setIngredient(IngredientType.SUGAR, ivt.checkIngredient(IngredientType.SUGAR, "-5"));
 			Assertions.fail("should fail as cannot set to a negative int");
 		} catch (IllegalArgumentException e) {
-			ivt.setSugar(ivt.checkSugar("5"));
+			ivt.setIngredient(IngredientType.SUGAR, ivt.checkIngredient(IngredientType.SUGAR, "5"));
 		}
 		try {
-			ivt.setSugar(ivt.checkSugar("five"));
+			ivt.setIngredient(IngredientType.SUGAR, ivt.checkIngredient(IngredientType.SUGAR, "five"));
 			Assertions.fail("should fail as cannot set to a string");
 		} catch (IllegalArgumentException e) {
-			ivt.setSugar(ivt.checkSugar("5"));
+			ivt.setIngredient(IngredientType.SUGAR, ivt.checkIngredient(IngredientType.SUGAR, "5"));
 		}
-		Assertions.assertEquals(5, (int) ivt.getSugar());
+		Assertions.assertEquals(5, (int) ivt.getIngredient(IngredientType.SUGAR));
 	}
 	
 	@Test
@@ -293,10 +295,10 @@ public class InventoryTest {
         final Recipe r1 = new Recipe();
         r1.setName( "test" );
         r1.setPrice( 1000 );
-        r1.setCoffee( 1000 );
-        r1.setMilk( 1000 );
-        r1.setSugar( 1000 );
-        r1.setChocolate( 1000 );
+		r1.addIngredient(new Ingredient(IngredientType.COFFEE, 1000));
+		r1.addIngredient(new Ingredient(IngredientType.MILK, 1000));
+		r1.addIngredient(new Ingredient(IngredientType.SUGAR, 1000));
+		r1.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 1000));
         Assertions.assertEquals(false, ivt.enoughIngredients(r1));
 		
 	}
