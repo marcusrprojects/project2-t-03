@@ -1,10 +1,8 @@
 package edu.ncsu.csc.CoffeeMaker.api;
 
 import edu.ncsu.csc.CoffeeMaker.common.TestUtils;
-import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,10 +54,10 @@ public class APITest {
 
         if (!recipe.contains("Mocha")) {
             final Recipe r = new Recipe();
-            r.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 5));
-            r.addIngredient(new Ingredient(IngredientType.COFFEE, 3));
-            r.addIngredient(new Ingredient(IngredientType.MILK, 4));
-            r.addIngredient(new Ingredient(IngredientType.SUGAR, 8));
+            r.setChocolate(5);
+            r.setCoffee(3);
+            r.setMilk(4);
+            r.setSugar(8);
             r.setPrice(10);
             r.setName("Mocha");
 
@@ -89,10 +87,10 @@ public class APITest {
 
         if (!recipe.contains("Mocha")) {
             final Recipe r = new Recipe();
-            r.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 5));
-            r.addIngredient(new Ingredient(IngredientType.COFFEE, 3));
-            r.addIngredient(new Ingredient(IngredientType.MILK, 4));
-            r.addIngredient(new Ingredient(IngredientType.SUGAR, 8));
+            r.setChocolate(5);
+            r.setCoffee(3);
+            r.setMilk(4);
+            r.setSugar(8);
             r.setPrice(10);
             r.setName("Mocha");
 

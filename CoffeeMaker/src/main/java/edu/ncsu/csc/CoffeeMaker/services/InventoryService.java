@@ -17,6 +17,7 @@ import edu.ncsu.csc.CoffeeMaker.repositories.InventoryRepository;
  * Inventory singleton.
  *
  * @author Kai Presler-Marshall
+ *
  */
 @Component
 @Transactional
@@ -30,7 +31,7 @@ public class InventoryService extends Service<Inventory, Long> {
     private InventoryRepository inventoryRepository;
 
     @Override
-    protected JpaRepository<Inventory, Long> getRepository() {
+    protected JpaRepository<Inventory, Long> getRepository () {
         return inventoryRepository;
     }
 
@@ -40,14 +41,15 @@ public class InventoryService extends Service<Inventory, Long> {
      *
      * @return the Inventory, either new or fetched
      */
-    public synchronized Inventory getInventory() {
+    public synchronized Inventory getInventory () {
         final List<Inventory> inventoryList = findAll();
-        if (inventoryList != null && inventoryList.size() == 1) {
-            return inventoryList.get(0);
-        } else {
+        if ( inventoryList != null && inventoryList.size() == 1 ) {
+            return inventoryList.get( 0 );
+        }
+        else {
             // initialize the inventory with 0 of everything
-            final Inventory i = new Inventory(0, 0, 0, 0);
-            save(i);
+            final Inventory i = new Inventory( 0, 0, 0, 0 );
+            save( i );
             return i;
         }
     }

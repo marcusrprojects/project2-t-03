@@ -5,8 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.transaction.Transactional;
 
-import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,10 +36,10 @@ public class APIRecipeTest {
         service.deleteAll();
 
         final Recipe r = new Recipe();
-        r.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 5));
-        r.addIngredient(new Ingredient(IngredientType.COFFEE, 3));
-        r.addIngredient(new Ingredient(IngredientType.MILK, 4));
-        r.addIngredient(new Ingredient(IngredientType.SUGAR, 8));
+        r.setChocolate( 5 );
+        r.setCoffee( 3 );
+        r.setMilk( 4 );
+        r.setSugar( 8 );
         r.setPrice( 10 );
         r.setName( "Mocha" );
 
@@ -59,10 +57,10 @@ public class APIRecipeTest {
 
         final Recipe recipe = new Recipe();
         recipe.setName( "Delicious Not-Coffee" );
-        recipe.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 10));
-        recipe.addIngredient(new Ingredient(IngredientType.MILK, 20));
-        recipe.addIngredient(new Ingredient(IngredientType.SUGAR, 5));
-        recipe.addIngredient(new Ingredient(IngredientType.COFFEE, 1));
+        recipe.setChocolate( 10 );
+        recipe.setMilk( 20 );
+        recipe.setSugar( 5 );
+        recipe.setCoffee( 1 );
 
         recipe.setPrice( 5 );
 
@@ -125,10 +123,10 @@ public class APIRecipeTest {
         final Recipe recipe = new Recipe();
         recipe.setName( name );
         recipe.setPrice( price );
-        recipe.addIngredient(new Ingredient(IngredientType.COFFEE, coffee));
-        recipe.addIngredient(new Ingredient(IngredientType.MILK, milk));
-        recipe.addIngredient(new Ingredient(IngredientType.SUGAR, sugar));
-        recipe.addIngredient(new Ingredient(IngredientType.CHOCOLATE, chocolate));
+        recipe.setCoffee( coffee );
+        recipe.setMilk( milk );
+        recipe.setSugar( sugar );
+        recipe.setChocolate( chocolate );
 
         return recipe;
     }
