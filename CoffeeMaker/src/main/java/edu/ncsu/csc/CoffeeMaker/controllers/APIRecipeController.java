@@ -1,7 +1,7 @@
 package edu.ncsu.csc.CoffeeMaker.controllers;
 
-import java.util.List;
-
+import edu.ncsu.csc.CoffeeMaker.models.Recipe;
+import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.ncsu.csc.CoffeeMaker.models.Recipe;
-import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
+import java.util.List;
 
 /**
  * This is the controller that holds the REST endpoints that handle CRUD

@@ -1,15 +1,15 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,7 +45,7 @@ public class Recipe extends DomainObject {
      */
     @ElementCollection
     @JoinColumn(name = "ingredient_name")
-    private Map<Ingredient, Integer> ingredients;
+    private Map<Ingredient, @Min(0) Integer> ingredients;
 
     /**
      * Creates a default recipe for the coffee maker.
@@ -60,9 +60,7 @@ public class Recipe extends DomainObject {
      * @param ingredient to be added
      */
     public void addIngredient(Ingredient ingredient, Integer amount) {
-        if (amount > 0) {
-            this.ingredients.put(ingredient, amount);
-        }
+        this.ingredients.put(ingredient, amount);
     }
 
     /**
@@ -155,7 +153,13 @@ public class Recipe extends DomainObject {
      */
     public void updateRecipe(final Recipe r) {
         setPrice(r.getPrice());
-        setIngredients(r.getIngredients());
+        Map<Ingredient, Integer> ingredients = new HashMap<>();
+
+        for (Map.Entry<Ingredient, Integer> i : r.getIngredients().entrySet()) {
+            ingredients.put(new Ingredient(i.getKey().getName()), i.getValue());
+        }
+
+        setIngredients(ingredients);
     }
 
     /**
@@ -168,8 +172,12 @@ public class Recipe extends DomainObject {
         StringBuilder builder = new StringBuilder();
 
         builder.append(this.name).append(", Ingredients: {\n");
-        for (Map.Entry<Ingredient, Integer> ingredient : this.ingredients.entrySet()) {
-            builder.append(ingredient.getKey().getName()).append(": ").append(ingredient.getValue()).append("\n");
+
+        List<Ingredient> ingredientList = new ArrayList<>(this.ingredients.keySet());
+        Collections.sort(ingredientList);
+
+        for (Ingredient ingredient : ingredientList) {
+            builder.append(ingredient.getName()).append(": ").append(this.ingredients.get(ingredient)).append("\n");
         }
 
         builder.append("}");

@@ -1,15 +1,16 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ public class Inventory extends DomainObject {
      */
     @ElementCollection
     @JoinColumn(name = "ingredient_name")
-    private Map<Ingredient, Integer> ingredients;
+    private Map<Ingredient, @Min(0) Integer> ingredients;
 
     /**
      * Empty constructor for Hibernate
@@ -195,11 +196,13 @@ public class Inventory extends DomainObject {
      * @return true if successful, false if not
      */
     public boolean addIngredients(Map<Ingredient, Integer> ingredients) {
-        for (Map.Entry<Ingredient, Integer> ingredient : ingredients.entrySet()) {
-            if (ingredient.getValue() < 0) {
+        for (Integer amount : ingredients.values()) {
+            if (amount < 0) {
                 throw new IllegalArgumentException("Amount cannot be negative");
             }
+        }
 
+        for (Map.Entry<Ingredient, Integer> ingredient : ingredients.entrySet()) {
             setIngredient(ingredient.getKey().getName(),
                     getIngredient(ingredient.getKey().getName()) + ingredient.getValue());
         }
@@ -216,8 +219,11 @@ public class Inventory extends DomainObject {
     public String toString() {
         final StringBuffer buf = new StringBuffer();
 
-        for (Map.Entry<Ingredient, Integer> ingredient : this.ingredients.entrySet()) {
-            buf.append(ingredient.getKey().getName()).append(": ").append(ingredient.getValue()).append("\n");
+        List<Ingredient> ingredientList = new ArrayList<>(this.ingredients.keySet());
+        Collections.sort(ingredientList);
+
+        for (Ingredient ingredient : ingredientList) {
+            buf.append(ingredient.getName()).append(": ").append(this.ingredients.get(ingredient)).append("\n");
         }
 
         return buf.toString();

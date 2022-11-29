@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Darien Gillespie
  */
 @Entity
-public class Ingredient extends DomainObject {
+public class Ingredient extends DomainObject implements Comparable<Ingredient> {
 
     /**
      * Ingredient id
@@ -75,4 +75,8 @@ public class Ingredient extends DomainObject {
                 '}';
     }
 
+    @Override
+    public int compareTo(Ingredient i) {
+        return this.name.compareTo(i.getName());
+    }
 }

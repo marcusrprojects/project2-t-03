@@ -286,7 +286,7 @@ public class RecipeTest {
             Assertions.assertEquals(1, ingredientAmt);
         }
 
-        Assertions.assertEquals("Black Coffee, Ingredients: {COFFEE: 1, MILK: 1, SUGAR: 1, CHOCOLATE: 1}", r1.toString());
+        Assertions.assertEquals("Black Coffee, Ingredients: {\nChocolate: 1\nCoffee: 1\nMilk: 1\nSugar: 1\n}", r1.toString());
 
         r1.setName("Mocha");
 

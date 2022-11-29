@@ -290,10 +290,7 @@ public class InventoryTest {
         addedIngredients.put(new Ingredient("Sugar"), 7);
         addedIngredients.put(new Ingredient("Chocolate"), 2);
         ivt.addIngredients(addedIngredients);
-        Assertions.assertEquals("Coffee: 505\n"
-                + "Milk: 503\n"
-                + "Sugar: 507\n"
-                + "Chocolate: 502\n", ivt.toString());
+        Assertions.assertEquals("Chocolate: 502\nCoffee: 505\nMilk: 503\nSugar: 507\n", ivt.toString());
 
     }
 
