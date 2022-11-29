@@ -34,7 +34,6 @@ public class Inventory extends DomainObject {
      */
     @ElementCollection
     @JoinColumn(name = "ingredient_name")
-    @OneToMany(targetEntity = Ingredient.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Map<Ingredient, Integer> ingredients;
 
     /**

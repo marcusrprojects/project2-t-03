@@ -211,6 +211,7 @@ public class InventoryTest {
     }
 
     @Test
+    @Transactional
     public void testCheckInventory() {
         final Inventory ivt = inventoryService.getInventory();
         Map<Ingredient, Integer> addedIngredients = new HashMap<>();

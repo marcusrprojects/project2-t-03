@@ -45,10 +45,10 @@ public class RecipeTest {
         final Recipe r2 = new Recipe();
         r2.setName("Mocha");
         r2.setPrice(1);
-        r1.addIngredient(new Ingredient("Coffee"), 1);
-        r1.addIngredient(new Ingredient("Milk"), 1);
-        r1.addIngredient(new Ingredient("Sugar"), 1);
-        r1.addIngredient(new Ingredient("Chocolate"), 1);
+        r2.addIngredient(new Ingredient("Coffee"), 1);
+        r2.addIngredient(new Ingredient("Milk"), 1);
+        r2.addIngredient(new Ingredient("Sugar"), 1);
+        r2.addIngredient(new Ingredient("Chocolate"), 1);
         service.save(r2);
 
         final List<Recipe> recipes = service.findAll();
@@ -89,6 +89,7 @@ public class RecipeTest {
     }
 
     @Test
+    @Transactional
     public void testAddRecipe1() {
 
         Assertions.assertEquals(0, service.findAll().size(), "There should be no Recipes in the CoffeeMaker");
@@ -320,7 +321,6 @@ public class RecipeTest {
         Assertions.assertEquals(3, (int) retrieved.getIngredient("Coffee").getValue());
         Assertions.assertEquals(1, (int) retrieved.getIngredient("Milk").getValue());
         Assertions.assertEquals(1, (int) retrieved.getIngredient("Sugar").getValue());
-        Assertions.assertEquals(0, (int) retrieved.getIngredient("Chocolate").getValue());
 
         Assertions.assertEquals(1, service.count(), "Editing a recipe shouldn't duplicate it");
 
