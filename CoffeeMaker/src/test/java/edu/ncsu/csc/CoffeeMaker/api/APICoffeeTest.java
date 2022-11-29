@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import javax.transaction.Transactional;
 
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,20 +45,20 @@ public class APICoffeeTest {
 
         final Inventory ivt = iService.getInventory();
 
-        ivt.setIngredient(IngredientType.CHOCOLATE, 15);
-        ivt.setIngredient(IngredientType.COFFEE, 15);
-        ivt.setIngredient(IngredientType.MILK, 15);
-        ivt.setIngredient(IngredientType.SUGAR, 15);
+        ivt.setIngredient("Chocolate", 15);
+        ivt.setIngredient("Coffee", 15);
+        ivt.setIngredient("Milk", 15);
+        ivt.setIngredient("Sugar", 15);
 
         iService.save(ivt);
 
         final Recipe recipe = new Recipe();
         recipe.setName("Coffee");
         recipe.setPrice(50);
-        recipe.addIngredient(new Ingredient(IngredientType.COFFEE, 3));
-        recipe.addIngredient(new Ingredient(IngredientType.MILK, 1));
-        recipe.addIngredient(new Ingredient(IngredientType.SUGAR, 1));
-        recipe.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 0));
+        recipe.addIngredient(new Ingredient("Coffee"), 3);
+        recipe.addIngredient(new Ingredient("Milk"), 1);
+        recipe.addIngredient(new Ingredient("Sugar"), 1);
+        recipe.addIngredient(new Ingredient("Chocolate"), 0);
         service.save(recipe);
     }
 
@@ -94,7 +93,7 @@ public class APICoffeeTest {
         /* Insufficient inventory */
 
         final Inventory ivt = iService.getInventory();
-        ivt.setIngredient(IngredientType.COFFEE, 0);
+        ivt.setIngredient("Coffee", 0);
         iService.save(ivt);
 
         final String name = "Coffee";

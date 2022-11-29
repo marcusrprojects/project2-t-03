@@ -1,16 +1,16 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
-
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Recipe for the coffee maker. Recipe is tied to the database using Hibernate
@@ -41,32 +41,44 @@ public class Recipe extends DomainObject {
     private Integer price;
 
     /**
-     * List of Recipe Ingredients
+     * Map of Recipe Ingredients to amounts
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private final List<Ingredient> ingredients;
+    @ElementCollection
+    @JoinColumn(name = "ingredient_name")
+    @OneToMany(targetEntity = Ingredient.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Map<Ingredient, Integer> ingredients;
 
     /**
      * Creates a default recipe for the coffee maker.
      */
     public Recipe() {
         this.name = "";
-        this.ingredients = new ArrayList<>();
+        this.ingredients = new HashMap<>();
     }
 
     /**
      * Adds a single Ingredient to the Recipe
      * @param ingredient to be added
      */
-    public void addIngredient(Ingredient ingredient) {
-        this.ingredients.add(ingredient);
+    public void addIngredient(Ingredient ingredient, Integer amount) {
+        if (amount > 0) {
+            this.ingredients.put(ingredient, amount);
+        }
+    }
+
+    /**
+     * Sets the ingredient map to an entirely new map.
+     * @param ingredients the map to replace the ingredients with
+     */
+    public void setIngredients(Map<Ingredient, Integer> ingredients) {
+        this.ingredients = ingredients;
     }
 
     /**
      * Gets all Ingredients in the Recipe
-     * @return list of Ingredients in the Recipe
+     * @return map of Ingredients in the Recipe
      */
-    public List<Ingredient> getIngredients() {
+    public Map<Ingredient, Integer> getIngredients() {
         return this.ingredients;
     }
 
@@ -75,14 +87,10 @@ public class Recipe extends DomainObject {
      * @param ingredientType the type of the Ingredient desired
      * @return desired Ingredient in the Recipe, or null if it's not in the recipe
      */
-    public Ingredient getIngredient(IngredientType ingredientType) {
-        for (Ingredient ingredient : this.ingredients) {
-            if (ingredient.getIngredient() == ingredientType) {
-                return ingredient;
-            }
-        }
+    public Map.Entry<Ingredient, Integer> getIngredient(String ingredientType) {
 
-        return null;
+        return this.ingredients.entrySet().stream().filter(
+                (ingredient) -> ingredient.getKey().getIngredient().equals(ingredientType)).findAny().orElse(null);
     }
 
     /**
@@ -148,16 +156,7 @@ public class Recipe extends DomainObject {
      */
     public void updateRecipe(final Recipe r) {
         setPrice(r.getPrice());
-
-        for (Ingredient ingredient : r.getIngredients()) {
-            if (this.getIngredient(ingredient.getIngredient()) != null) {
-                this.getIngredient(ingredient.getIngredient()).setAmount(ingredient.getAmount());
-            } else {
-                Ingredient newIngredient = new Ingredient(ingredient.getIngredient(), ingredient.getAmount());
-                this.addIngredient(newIngredient);
-            }
-        }
-
+        setIngredients(r.getIngredients());
     }
 
     /**
@@ -169,14 +168,9 @@ public class Recipe extends DomainObject {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(this.name).append(", Ingredients: {");
-        for (int i = 0; i < this.ingredients.size(); i++) {
-
-            builder.append(this.ingredients.get(i).getIngredient().toString()).append(": ").append(this.ingredients.get(i).getAmount());
-
-            if (i != this.ingredients.size() - 1) {
-                builder.append(", ");
-            }
+        builder.append(this.name).append(", Ingredients: {\n");
+        for (Map.Entry<Ingredient, Integer> ingredient : this.ingredients.entrySet()) {
+            builder.append(ingredient.getKey().getIngredient()).append(": ").append(ingredient.getValue()).append("\n");
         }
 
         builder.append("}");

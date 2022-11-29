@@ -1,6 +1,5 @@
 package edu.ncsu.csc.CoffeeMaker.controllers;
 
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +55,7 @@ public class APIInventoryController extends APIController {
     @PutMapping(BASE_PATH + "/inventory")
     public ResponseEntity updateInventory(@RequestBody final Inventory inventory) {
         final Inventory inventoryCurrent = service.getInventory();
-        inventoryCurrent.addIngredients(inventory.getIngredient(IngredientType.COFFEE), inventory.getIngredient(IngredientType.MILK),
-                inventory.getIngredient(IngredientType.SUGAR), inventory.getIngredient(IngredientType.CHOCOLATE));
+        inventoryCurrent.addIngredients(inventory.getIngredients());
         service.save(inventoryCurrent);
         return new ResponseEntity(inventoryCurrent, HttpStatus.OK);
     }

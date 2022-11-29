@@ -1,16 +1,22 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Min;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.OneToOne;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Inventory for the coffee maker. Inventory is tied to the database using
@@ -30,16 +36,18 @@ public class Inventory extends DomainObject {
     private Long id;
 
     /**
-     * list of Ingredients in inventory
+     * Map of Ingredients in inventory to their amounts
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Ingredient> ingredients;
+    @ElementCollection
+    @JoinColumn(name = "ingredient_name")
+    @OneToMany(targetEntity = Ingredient.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Map<Ingredient, Integer> ingredients;
 
     /**
      * Empty constructor for Hibernate
      */
     public Inventory() {
-        this.ingredients = new ArrayList<>();
+        this.ingredients = new HashMap<>();
         // Intentionally empty so that Hibernate can instantiate
         // Inventory object.
     }
@@ -47,17 +55,10 @@ public class Inventory extends DomainObject {
     /**
      * Use this to create inventory with specified amts.
      *
-     * @param coffee    amt of coffee
-     * @param milk      amt of milk
-     * @param sugar     amt of sugar
-     * @param chocolate amt of chocolate
+     * @param ingredients the initial ingredients in the inventory
      */
-    public Inventory(final Integer coffee, final Integer milk, final Integer sugar, final Integer chocolate) {
-        this.ingredients = new ArrayList<>();
-        setIngredient(IngredientType.COFFEE, coffee);
-        setIngredient(IngredientType.MILK, milk);
-        setIngredient(IngredientType.SUGAR, sugar);
-        setIngredient(IngredientType.CHOCOLATE, chocolate);
+    public Inventory(Map<Ingredient, Integer> ingredients) {
+        this.ingredients = ingredients;
     }
 
     /**
@@ -85,10 +86,10 @@ public class Inventory extends DomainObject {
      * @param ingredientType the type of ingredient to fetch
      * @return amount of the requested ingredient
      */
-    public Integer getIngredient(IngredientType ingredientType) {
-        for (Ingredient ingredient : this.ingredients) {
-            if (ingredient.getIngredient() == ingredientType) {
-                return ingredient.getAmount();
+    public Integer getIngredient(String ingredientType) {
+        for (Ingredient ingredient : this.ingredients.keySet()) {
+            if (ingredient.getIngredient().equals(ingredientType)) {
+                return this.ingredients.get(ingredient);
             }
         }
 
@@ -96,11 +97,11 @@ public class Inventory extends DomainObject {
     }
 
     /**
-     * Returns the entire list of Ingredients in the inventory
+     * Returns the entire map of Ingredients in the inventory
      *
-     * @return the list of Ingredients
+     * @return the map of Ingredients
      */
-    public List<Ingredient> getIngredients() {
+    public Map<Ingredient, Integer> getIngredients() {
         return this.ingredients;
     }
 
@@ -108,42 +109,41 @@ public class Inventory extends DomainObject {
      * Sets the number of units of the requested ingredient in the inventory to the specified amount.
      *
      * @param ingredientType the type of the ingredient to set
-     * @param amt amount of ingredient to set
+     * @param amt            amount of ingredient to set
      */
-    public void setIngredient(IngredientType ingredientType, Integer amt) {
-        for (Ingredient ingredient : this.ingredients) {
-            if (ingredient.getIngredient() == ingredientType) {
-                ingredient.setAmount(amt);
+    public void setIngredient(String ingredientType, Integer amt) {
+        for (Ingredient ingredient : this.ingredients.keySet()) {
+            if (ingredient.getIngredient().equals(ingredientType)) {
+                this.ingredients.put(ingredient, amt);
                 return;
             }
         }
 
-        this.ingredients.add(new Ingredient(ingredientType, amt));
+        this.ingredients.put(new Ingredient(ingredientType), amt);
     }
 
     /**
-     * Sets an entire new list of Ingredients in the inventory, replacing the existing one.
+     * Sets an entire new map of Ingredients in the inventory, replacing the existing one.
      *
-     * @param ingredients the list to replace it with
+     * @param ingredients the map to replace it with
      */
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(Map<Ingredient, Integer> ingredients) {
         this.ingredients = ingredients;
     }
 
     /**
-     * Add the number of units of the requested ingredient in the inventory to the current amount
+     * Checks that the number of units of the to add is a valid, non-negative amount
      * of units of that ingredient.
      *
-     * @param ingredientType ingredient to add to
-     * @param ingredient amount to add
+     * @param ingredientAmt amount to add
      * @return checked amount of ingredient
      * @throws IllegalArgumentException if the parameter isn't a positive integer or the Ingredient
-     * isn't in the inventory
+     *                                  isn't in the inventory
      */
-    public Integer checkIngredient(IngredientType ingredientType, final String ingredient) {
+    public Integer checkIngredient(final String ingredientAmt) {
         Integer amtIngredient = 0;
         try {
-            amtIngredient = Integer.parseInt(ingredient);
+            amtIngredient = Integer.parseInt(ingredientAmt);
         } catch (final NumberFormatException e) {
             throw new IllegalArgumentException("Units of ingredient must be a positive integer");
         }
@@ -161,15 +161,14 @@ public class Inventory extends DomainObject {
      * @return true if enough ingredients to make the beverage
      */
     public boolean enoughIngredients(final Recipe r) {
-        boolean isEnough = true;
 
-        for (Ingredient ingredient : r.getIngredients()) {
-            if (getIngredient(ingredient.getIngredient()) < ingredient.getAmount()) {
-                isEnough = false;
+        for (Map.Entry<Ingredient, Integer> ingredient : r.getIngredients().entrySet()) {
+            if (getIngredient(ingredient.getKey().getIngredient()) < ingredient.getValue()) {
+                return false;
             }
         }
 
-        return isEnough;
+        return true;
     }
 
     /**
@@ -181,9 +180,10 @@ public class Inventory extends DomainObject {
      */
     public boolean useIngredients(final Recipe r) {
         if (enoughIngredients(r)) {
-            for (Ingredient ingredient : r.getIngredients()) {
-                if (getIngredient(ingredient.getIngredient()) != null) {
-                    setIngredient(ingredient.getIngredient(), getIngredient(ingredient.getIngredient()) - ingredient.getAmount());
+            for (Map.Entry<Ingredient, Integer> ingredient : r.getIngredients().entrySet()) {
+                if (getIngredient(ingredient.getKey().getIngredient()) != null) {
+                    setIngredient(ingredient.getKey().getIngredient(),
+                            getIngredient(ingredient.getKey().getIngredient()) - ingredient.getValue());
                 } else {
                     return false;
                 }
@@ -198,22 +198,18 @@ public class Inventory extends DomainObject {
     /**
      * Adds ingredients to the inventory
      *
-     * @param coffee    amt of coffee
-     * @param milk      amt of milk
-     * @param sugar     amt of sugar
-     * @param chocolate amt of chocolate
+     * @param ingredients map of ingredients to add to amount to add
      * @return true if successful, false if not
      */
-    public boolean addIngredients(final Integer coffee, final Integer milk, final Integer sugar,
-                                  final Integer chocolate) {
-        if (coffee < 0 || milk < 0 || sugar < 0 || chocolate < 0) {
-            throw new IllegalArgumentException("Amount cannot be negative");
-        }
+    public boolean addIngredients(Map<Ingredient, Integer> ingredients) {
+        for (Map.Entry<Ingredient, Integer> ingredient : ingredients.entrySet()) {
+            if (ingredient.getValue() < 0) {
+                throw new IllegalArgumentException("Amount cannot be negative");
+            }
 
-        setIngredient(IngredientType.COFFEE, getIngredient(IngredientType.COFFEE) + coffee);
-        setIngredient(IngredientType.MILK, getIngredient(IngredientType.MILK) + milk);
-        setIngredient(IngredientType.SUGAR, getIngredient(IngredientType.SUGAR) + sugar);
-        setIngredient(IngredientType.CHOCOLATE, getIngredient(IngredientType.CHOCOLATE) + chocolate);
+            setIngredient(ingredient.getKey().getIngredient(),
+                    getIngredient(ingredient.getKey().getIngredient()) + ingredient.getValue());
+        }
 
         return true;
     }
@@ -226,18 +222,11 @@ public class Inventory extends DomainObject {
     @Override
     public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("Coffee: ");
-        buf.append(getIngredient(IngredientType.COFFEE));
-        buf.append("\n");
-        buf.append("Milk: ");
-        buf.append(getIngredient(IngredientType.MILK));
-        buf.append("\n");
-        buf.append("Sugar: ");
-        buf.append(getIngredient(IngredientType.SUGAR));
-        buf.append("\n");
-        buf.append("Chocolate: ");
-        buf.append(getIngredient(IngredientType.CHOCOLATE));
-        buf.append("\n");
+
+        for (Map.Entry<Ingredient, Integer> ingredient : this.ingredients.entrySet()) {
+            buf.append(ingredient.getKey().getIngredient()).append(": ").append(ingredient.getValue()).append("\n");
+        }
+
         return buf.toString();
     }
 
