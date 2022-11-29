@@ -26,22 +26,22 @@ public class Ingredient extends DomainObject {
     /**
      * Ingredient name
      */
-    private String ingredient;
+    private String name;
 
     /**
      * Creates a default Ingredient for the CoffeeMaker
      */
     public Ingredient() {
-        this.ingredient = "";
+        this.name = "";
     }
 
     /**
      * Creates a specific Ingredient for the CoffeeMaker
      *
-     * @param ingredient type of the ingredient to create
+     * @param name type of the ingredient to create
      */
-    public Ingredient(String ingredient) {
-        this.ingredient = ingredient;
+    public Ingredient(String name) {
+        this.name = name;
     }
 
     /**
@@ -49,17 +49,17 @@ public class Ingredient extends DomainObject {
      *
      * @return the ingredient type
      */
-    public String getIngredient() {
-        return this.ingredient;
+    public String getName() {
+        return this.name;
     }
 
     /**
      * Sets the type of the Ingredient
      *
-     * @param ingredient type to be set
+     * @param name type to be set
      */
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Ingredient extends DomainObject {
     public String toString() {
         return "Ingredient{" +
                 "id=" + id +
-                ", ingredient=" + ingredient +
+                ", ingredient=" + name +
                 '}';
     }
 

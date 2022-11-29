@@ -33,7 +33,6 @@ public class APIIngredientController extends APIController {
         return ingredientService.findAll();
     }
 
-/*
     @GetMapping(BASE_PATH + "ingredients/{name}")
     public ResponseEntity getIngredient(@PathVariable final String name) {
 
@@ -45,7 +44,6 @@ public class APIIngredientController extends APIController {
 
         return new ResponseEntity(ingr, HttpStatus.OK);
     }
-*/
 
     /**
      * REST API method to provide POST access to the Ingredient model. This is used
@@ -62,8 +60,8 @@ public class APIIngredientController extends APIController {
         ingredientService.save(ingredient);
         return new ResponseEntity(successResponse(ingredient.toString() + " successfully created"), HttpStatus.OK);
     }
-/*
-    *//**
+
+    /**
      * REST API method to allow deleting an Ingredient from the CoffeeMaker's
      * Inventory, by making a DELETE request to the API endpoint and indicating
      * the ingredient to delete (as a path variable)
@@ -71,7 +69,7 @@ public class APIIngredientController extends APIController {
      * @param name The name of the Ingredient to delete
      * @return Success if the ingredient could be deleted; an error if the ingredient
      * does not exist
-     *//*
+     */
     @DeleteMapping(BASE_PATH + "/ingredients/{name}")
     public ResponseEntity deleteIngredient(@PathVariable final String name) {
         final Ingredient ingredient = ingredientService.findByName(name);
@@ -82,5 +80,5 @@ public class APIIngredientController extends APIController {
 
         return new ResponseEntity(successResponse(name + " was deleted successfully"), HttpStatus.OK);
     }
-*/
+
 }

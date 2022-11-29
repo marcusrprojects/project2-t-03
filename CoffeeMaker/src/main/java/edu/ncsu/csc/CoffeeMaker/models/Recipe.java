@@ -90,7 +90,7 @@ public class Recipe extends DomainObject {
     public Map.Entry<Ingredient, Integer> getIngredient(String ingredientType) {
 
         return this.ingredients.entrySet().stream().filter(
-                (ingredient) -> ingredient.getKey().getIngredient().equals(ingredientType)).findAny().orElse(null);
+                (ingredient) -> ingredient.getKey().getName().equals(ingredientType)).findAny().orElse(null);
     }
 
     /**
@@ -170,7 +170,7 @@ public class Recipe extends DomainObject {
 
         builder.append(this.name).append(", Ingredients: {\n");
         for (Map.Entry<Ingredient, Integer> ingredient : this.ingredients.entrySet()) {
-            builder.append(ingredient.getKey().getIngredient()).append(": ").append(ingredient.getValue()).append("\n");
+            builder.append(ingredient.getKey().getName()).append(": ").append(ingredient.getValue()).append("\n");
         }
 
         builder.append("}");

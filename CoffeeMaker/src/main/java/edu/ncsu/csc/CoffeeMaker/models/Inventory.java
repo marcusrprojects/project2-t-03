@@ -8,13 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,7 +82,7 @@ public class Inventory extends DomainObject {
      */
     public Integer getIngredient(String ingredientType) {
         for (Ingredient ingredient : this.ingredients.keySet()) {
-            if (ingredient.getIngredient().equals(ingredientType)) {
+            if (ingredient.getName().equals(ingredientType)) {
                 return this.ingredients.get(ingredient);
             }
         }
@@ -113,7 +107,7 @@ public class Inventory extends DomainObject {
      */
     public void setIngredient(String ingredientType, Integer amt) {
         for (Ingredient ingredient : this.ingredients.keySet()) {
-            if (ingredient.getIngredient().equals(ingredientType)) {
+            if (ingredient.getName().equals(ingredientType)) {
                 this.ingredients.put(ingredient, amt);
                 return;
             }
@@ -163,7 +157,7 @@ public class Inventory extends DomainObject {
     public boolean enoughIngredients(final Recipe r) {
 
         for (Map.Entry<Ingredient, Integer> ingredient : r.getIngredients().entrySet()) {
-            if (getIngredient(ingredient.getKey().getIngredient()) < ingredient.getValue()) {
+            if (getIngredient(ingredient.getKey().getName()) < ingredient.getValue()) {
                 return false;
             }
         }
@@ -181,9 +175,9 @@ public class Inventory extends DomainObject {
     public boolean useIngredients(final Recipe r) {
         if (enoughIngredients(r)) {
             for (Map.Entry<Ingredient, Integer> ingredient : r.getIngredients().entrySet()) {
-                if (getIngredient(ingredient.getKey().getIngredient()) != null) {
-                    setIngredient(ingredient.getKey().getIngredient(),
-                            getIngredient(ingredient.getKey().getIngredient()) - ingredient.getValue());
+                if (getIngredient(ingredient.getKey().getName()) != null) {
+                    setIngredient(ingredient.getKey().getName(),
+                            getIngredient(ingredient.getKey().getName()) - ingredient.getValue());
                 } else {
                     return false;
                 }
@@ -207,8 +201,8 @@ public class Inventory extends DomainObject {
                 throw new IllegalArgumentException("Amount cannot be negative");
             }
 
-            setIngredient(ingredient.getKey().getIngredient(),
-                    getIngredient(ingredient.getKey().getIngredient()) + ingredient.getValue());
+            setIngredient(ingredient.getKey().getName(),
+                    getIngredient(ingredient.getKey().getName()) + ingredient.getValue());
         }
 
         return true;
@@ -224,7 +218,7 @@ public class Inventory extends DomainObject {
         final StringBuffer buf = new StringBuffer();
 
         for (Map.Entry<Ingredient, Integer> ingredient : this.ingredients.entrySet()) {
-            buf.append(ingredient.getKey().getIngredient()).append(": ").append(ingredient.getValue()).append("\n");
+            buf.append(ingredient.getKey().getName()).append(": ").append(ingredient.getValue()).append("\n");
         }
 
         return buf.toString();
