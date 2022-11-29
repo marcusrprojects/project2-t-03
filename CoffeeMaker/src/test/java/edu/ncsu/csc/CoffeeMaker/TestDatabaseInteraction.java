@@ -87,9 +87,7 @@ public class TestDatabaseInteraction {
 
         Assertions.assertEquals(3, dbRecipes.size());
 
-        Recipe dbRecipe1 = dbRecipes.get(0);
         Recipe dbRecipe2 = dbRecipes.get(1);
-        Recipe dbRecipe3 = dbRecipes.get(2);
         
         recipeService.delete(dbRecipe2);
         

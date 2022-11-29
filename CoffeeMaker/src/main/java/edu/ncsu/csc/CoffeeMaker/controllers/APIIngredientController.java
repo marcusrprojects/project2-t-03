@@ -14,6 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ *
+ * The APIIngredientController is responsible for handling ingredients when a user submits
+ * a request to do so.
+ *
+ * Spring will automatically convert all of the ResponseEntity and List results
+ * to JSON
+ *
+ * @author Darien Gillespie
+ *
+ */
 @RestController
 public class APIIngredientController extends APIController {
     /**
@@ -33,6 +44,11 @@ public class APIIngredientController extends APIController {
         return ingredientService.findAll();
     }
 
+    /**
+     * REST API method to provide GET access to a single ingredient in the system
+     * @param name name of the ingredient to GET
+     * @return JSON representation of the ingredient
+     */
     @GetMapping(BASE_PATH + "ingredients/{name}")
     public ResponseEntity getIngredient(@PathVariable final String name) {
 

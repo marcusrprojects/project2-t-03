@@ -58,6 +58,7 @@ public class Recipe extends DomainObject {
     /**
      * Adds a single Ingredient to the Recipe
      * @param ingredient to be added
+     * @param amount amount to be added
      */
     public void addIngredient(Ingredient ingredient, Integer amount) {
         this.ingredients.put(ingredient, amount);
@@ -153,13 +154,13 @@ public class Recipe extends DomainObject {
      */
     public void updateRecipe(final Recipe r) {
         setPrice(r.getPrice());
-        Map<Ingredient, Integer> ingredients = new HashMap<>();
+        Map<Ingredient, Integer> ingredientIntegerMap = new HashMap<>();
 
         for (Map.Entry<Ingredient, Integer> i : r.getIngredients().entrySet()) {
-            ingredients.put(new Ingredient(i.getKey().getName()), i.getValue());
+            ingredientIntegerMap.put(new Ingredient(i.getKey().getName()), i.getValue());
         }
 
-        setIngredients(ingredients);
+        setIngredients(ingredientIntegerMap);
     }
 
     /**

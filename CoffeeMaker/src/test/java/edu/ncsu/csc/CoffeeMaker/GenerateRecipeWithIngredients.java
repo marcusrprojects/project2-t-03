@@ -1,5 +1,6 @@
 package edu.ncsu.csc.CoffeeMaker;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,8 @@ public class GenerateRecipeWithIngredients {
         r1.addIngredient(new Ingredient("Milk"), 2);
 
         recipeService.save(r1);
+
+        Assertions.assertEquals(1, recipeService.count());
 
         printRecipes();
     }
