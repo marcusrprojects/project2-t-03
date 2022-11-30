@@ -105,6 +105,7 @@ public class InventoryTest {
             addedIngredients.put(new Ingredient("Sugar"), 7);
             addedIngredients.put(new Ingredient("Chocolate"), 2);
             ivt.addIngredients(addedIngredients);
+            Assertions.fail("Trying to update Inventory with an invalid value for coffee should throw an iae, but did not.");
         } catch (final IllegalArgumentException iae) {
             Assertions.assertEquals(500, (int) ivt.getIngredient("Coffee"),
                     "Trying to update the Inventory with an invalid value for coffee should result in no changes -- coffee");
@@ -129,6 +130,7 @@ public class InventoryTest {
             addedIngredients.put(new Ingredient("Sugar"), 7);
             addedIngredients.put(new Ingredient("Chocolate"), 2);
             ivt.addIngredients(addedIngredients);
+            Assertions.fail("Trying to update Inventory with an invalid value for milk should throw an iae, but did not.");
         } catch (final IllegalArgumentException iae) {
             Assertions.assertEquals(500, (int) ivt.getIngredient("Coffee"),
                     "Trying to update the Inventory with an invalid value for milk should result in no changes -- coffee");
@@ -155,6 +157,7 @@ public class InventoryTest {
             addedIngredients.put(new Ingredient("Sugar"), -7);
             addedIngredients.put(new Ingredient("Chocolate"), 2);
             ivt.addIngredients(addedIngredients);
+            Assertions.fail("Trying to update Inventory with an invalid value for sugar should throw an iae, but did not.");
         } catch (final IllegalArgumentException iae) {
             Assertions.assertEquals(500, (int) ivt.getIngredient("Coffee"),
                     "Trying to update the Inventory with an invalid value for sugar should result in no changes -- coffee");
@@ -196,6 +199,7 @@ public class InventoryTest {
             addedIngredients.put(new Ingredient("Sugar"), 7);
             addedIngredients.put(new Ingredient("Chocolate"), -2);
             ivt.addIngredients(addedIngredients);
+            Assertions.fail("Trying to update Inventory with an invalid value for chocolate should throw an iae, but did not.");
         } catch (final IllegalArgumentException iae) {
             Assertions.assertEquals(500, (int) ivt.getIngredient("Coffee"),
                     "Trying to update the Inventory with an invalid value for chocolate should result in no changes -- coffee");
