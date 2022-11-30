@@ -47,7 +47,7 @@ public class GenerateRecipeWithIngredients {
         
         Long r1_id = r1.getId();
         Assertions.assertTrue(recipeService.existsById(r1_id),
-        		"A recipe by the id of r1 should exist, but it does nots.");
+        		"A recipe by the id of r1 should exist, but it does not.");
         
         Recipe r1_found = recipeService.findById(r1_id);
         Assertions.assertEquals(r1, r1_found,
