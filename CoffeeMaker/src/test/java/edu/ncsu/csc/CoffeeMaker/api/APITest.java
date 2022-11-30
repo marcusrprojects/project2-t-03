@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -90,7 +92,45 @@ public class APITest {
 
 		mvc.perform(get("/api/v1/inventory").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(inventory))).andExpect(status().isOk());
-
+	}
+	
+	@Test
+	@Transactional
+	public void testIngredient() throws Exception {
+		
+		Ingredient ingredient1 = new Ingredient();
+		ingredient1.setName("Vanilla");
+		
+		Ingredient ingredient2 = new Ingredient();
+		ingredient2.setName("Cheese");
+		
+		Ingredient ingredient3 = new Ingredient();
+		
+		List<Ingredient> ingList = new ArrayList<>();
+		
+		ingList.add(ingredient1);
+		ingList.add(ingredient2);
+		
+		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
+		
+		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient2))).andExpect(status().isOk());
+		
+		mvc.perform(get("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingList))).andExpect(status().isOk());
+		
+		mvc.perform(get("/api/v1/ingredients/Vanilla").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
+				
+		mvc.perform(delete("/api/v1/ingredients/Vanilla").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingList))).andExpect(status().isOk());
+		
+		mvc.perform(put("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
+		
+		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient3))).andExpect(status().isOk());
 	}
 
 	@Test
@@ -134,4 +174,5 @@ public class APITest {
 
 		Assertions.assertTrue(recipe.contains("failed"));
 	}
+	
 }

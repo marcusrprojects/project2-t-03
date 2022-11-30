@@ -41,15 +41,9 @@ public class APIIngredientController extends APIController {
      * @return JSON representation of all ingredients
      */
     @GetMapping(BASE_PATH + "ingredients")
-    public ResponseEntity getIngredients() {
+    public List<Ingredient> getIngredients() {
 
-        final List<Ingredient> ingr = ingredientService.findAll();
-
-        if (null == ingr) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity(ingr, HttpStatus.OK);
+        return ingredientService.findAll();
     }
 
     /**
