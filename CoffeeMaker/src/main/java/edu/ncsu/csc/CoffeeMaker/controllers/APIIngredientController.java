@@ -14,6 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ *
+ * The APIIngredientController is responsible for handling ingredients when a user submits
+ * a request to do so.
+ *
+ * Spring will automatically convert all of the ResponseEntity and List results
+ * to JSON
+ *
+ * @author Darien Gillespie
+ *
+ */
 @RestController
 public class APIIngredientController extends APIController {
     /**
@@ -33,7 +44,11 @@ public class APIIngredientController extends APIController {
         return ingredientService.findAll();
     }
 
-/*
+    /**
+     * REST API method to provide GET access to a single ingredient in the system
+     * @param name name of the ingredient to GET
+     * @return JSON representation of the ingredient
+     */
     @GetMapping(BASE_PATH + "ingredients/{name}")
     public ResponseEntity getIngredient(@PathVariable final String name) {
 
@@ -45,7 +60,6 @@ public class APIIngredientController extends APIController {
 
         return new ResponseEntity(ingr, HttpStatus.OK);
     }
-*/
 
     /**
      * REST API method to provide POST access to the Ingredient model. This is used
@@ -62,8 +76,8 @@ public class APIIngredientController extends APIController {
         ingredientService.save(ingredient);
         return new ResponseEntity(successResponse(ingredient.toString() + " successfully created"), HttpStatus.OK);
     }
-/*
-    *//**
+
+    /**
      * REST API method to allow deleting an Ingredient from the CoffeeMaker's
      * Inventory, by making a DELETE request to the API endpoint and indicating
      * the ingredient to delete (as a path variable)
@@ -71,7 +85,7 @@ public class APIIngredientController extends APIController {
      * @param name The name of the Ingredient to delete
      * @return Success if the ingredient could be deleted; an error if the ingredient
      * does not exist
-     *//*
+     */
     @DeleteMapping(BASE_PATH + "/ingredients/{name}")
     public ResponseEntity deleteIngredient(@PathVariable final String name) {
         final Ingredient ingredient = ingredientService.findByName(name);
@@ -82,5 +96,5 @@ public class APIIngredientController extends APIController {
 
         return new ResponseEntity(successResponse(name + " was deleted successfully"), HttpStatus.OK);
     }
-*/
+
 }

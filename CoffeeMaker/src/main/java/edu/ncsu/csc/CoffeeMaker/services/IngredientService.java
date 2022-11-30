@@ -30,13 +30,13 @@ public class IngredientService extends Service<Ingredient, Long> {
         return this.ingredientRepository;
     }
 
-/*    *//**
+    /**
      * Find an ingredient with the provided name
      *
      * @param name Name of the ingredient to find
      * @return found ingredient, null if none
-     *//*
+     */
     public Ingredient findByName(final String name) {
         return ingredientRepository.findByName(name);
-    }*/
+    }
 }

@@ -1,9 +1,9 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Darien Gillespie
  */
 @Entity
-public class Ingredient extends DomainObject {
+public class Ingredient extends DomainObject implements Comparable<Ingredient> {
 
     /**
      * Ingredient id
@@ -24,65 +24,42 @@ public class Ingredient extends DomainObject {
     private long id;
 
     /**
-     * Ingredient type
+     * Ingredient name
      */
-    @Enumerated(EnumType.STRING)
-    private IngredientType ingredient;
-
-    /**
-     * Ingredient amount
-     */
-    @Min(0)
-    private Integer amount;
+    private String name;
 
     /**
      * Creates a default Ingredient for the CoffeeMaker
      */
     public Ingredient() {
-        this.ingredient = IngredientType.COFFEE;
-        this.amount = 0;
+        this.name = "";
     }
 
     /**
      * Creates a specific Ingredient for the CoffeeMaker
-     * @param ingredient type of the ingredient to create
-     * @param amount amount of ingredient
+     *
+     * @param name type of the ingredient to create
      */
-    public Ingredient(IngredientType ingredient, Integer amount) {
-        this.ingredient = ingredient;
-        this.amount = amount;
+    public Ingredient(String name) {
+        this.name = name;
     }
 
     /**
      * Gets the type of the Ingredient
+     *
      * @return the ingredient type
      */
-    public IngredientType getIngredient() {
-        return this.ingredient;
+    public String getName() {
+        return this.name;
     }
 
     /**
      * Sets the type of the Ingredient
-     * @param ingredient type to be set
+     *
+     * @param name type to be set
      */
-    public void setIngredient(IngredientType ingredient) {
-        this.ingredient = ingredient;
-    }
-
-    /**
-     * Gets the amount of the Ingredient
-     * @return the amount of the Ingredient
-     */
-    public Integer getAmount() {
-        return this.amount;
-    }
-
-    /**
-     * Sets the amount of the Ingredient
-     * @param amount of the ingredient
-     */
-    public void setAmount(Integer amount) {
-        this.amount = amount;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -94,9 +71,12 @@ public class Ingredient extends DomainObject {
     public String toString() {
         return "Ingredient{" +
                 "id=" + id +
-                ", ingredient=" + ingredient +
-                ", amount=" + amount +
+                ", ingredient=" + name +
                 '}';
     }
 
+    @Override
+    public int compareTo(Ingredient i) {
+        return this.name.compareTo(i.getName());
+    }
 }

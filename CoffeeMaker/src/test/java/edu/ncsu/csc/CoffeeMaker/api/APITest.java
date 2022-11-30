@@ -4,7 +4,6 @@ import edu.ncsu.csc.CoffeeMaker.common.TestUtils;
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -56,10 +58,10 @@ public class APITest {
 
         if (!recipe.contains("Mocha")) {
             final Recipe r = new Recipe();
-            r.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 5));
-            r.addIngredient(new Ingredient(IngredientType.COFFEE, 3));
-            r.addIngredient(new Ingredient(IngredientType.MILK, 4));
-            r.addIngredient(new Ingredient(IngredientType.SUGAR, 8));
+            r.addIngredient(new Ingredient("Chocolate"), 5);
+            r.addIngredient(new Ingredient("Coffee"), 3);
+            r.addIngredient(new Ingredient("Milk"), 4);
+            r.addIngredient(new Ingredient("Sugar"), 8);
             r.setPrice(10);
             r.setName("Mocha");
 
@@ -72,7 +74,13 @@ public class APITest {
 
         Assertions.assertTrue(recipe.contains("Mocha"));
 
-        Inventory inventory = new Inventory(50, 50, 50, 50);
+        Map<Ingredient, Integer> initIngredients = new HashMap<>();
+        initIngredients.put(new Ingredient("Coffee"), 50);
+        initIngredients.put(new Ingredient("Milk"), 50);
+        initIngredients.put(new Ingredient("Sugar"), 50);
+        initIngredients.put(new Ingredient("Chocolate"), 50);
+
+        Inventory inventory = new Inventory(initIngredients);
 
         mvc.perform(put("/api/v1/inventory").contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtils.asJsonString(inventory))).andExpect(status().isOk());
@@ -89,10 +97,10 @@ public class APITest {
 
         if (!recipe.contains("Mocha")) {
             final Recipe r = new Recipe();
-            r.addIngredient(new Ingredient(IngredientType.CHOCOLATE, 5));
-            r.addIngredient(new Ingredient(IngredientType.COFFEE, 3));
-            r.addIngredient(new Ingredient(IngredientType.MILK, 4));
-            r.addIngredient(new Ingredient(IngredientType.SUGAR, 8));
+            r.addIngredient(new Ingredient("Chocolate"), 5);
+            r.addIngredient(new Ingredient("Coffee"), 3);
+            r.addIngredient(new Ingredient("Milk"), 4);
+            r.addIngredient(new Ingredient("Sugar"), 8);
             r.setPrice(10);
             r.setName("Mocha");
 

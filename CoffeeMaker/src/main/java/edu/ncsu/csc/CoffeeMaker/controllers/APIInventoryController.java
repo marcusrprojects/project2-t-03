@@ -1,6 +1,7 @@
 package edu.ncsu.csc.CoffeeMaker.controllers;
 
-import edu.ncsu.csc.CoffeeMaker.models.enums.IngredientType;
+import edu.ncsu.csc.CoffeeMaker.models.Inventory;
+import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,9 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import edu.ncsu.csc.CoffeeMaker.models.Inventory;
-import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 
 /**
  * This is the controller that holds the REST endpoints that handle add and
@@ -56,8 +54,7 @@ public class APIInventoryController extends APIController {
     @PutMapping(BASE_PATH + "/inventory")
     public ResponseEntity updateInventory(@RequestBody final Inventory inventory) {
         final Inventory inventoryCurrent = service.getInventory();
-        inventoryCurrent.addIngredients(inventory.getIngredient(IngredientType.COFFEE), inventory.getIngredient(IngredientType.MILK),
-                inventory.getIngredient(IngredientType.SUGAR), inventory.getIngredient(IngredientType.CHOCOLATE));
+        inventoryCurrent.addIngredients(inventory.getIngredients());
         service.save(inventoryCurrent);
         return new ResponseEntity(inventoryCurrent, HttpStatus.OK);
     }
