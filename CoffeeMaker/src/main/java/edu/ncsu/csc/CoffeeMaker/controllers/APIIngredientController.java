@@ -62,7 +62,7 @@ public class APIIngredientController extends APIController {
 
         final Ingredient ingr = ingredientService.findByName(name);
 
-        if (ingr.getName() == null || ingr.getName() == "") {
+        if (ingr.getName().equals(null) || ingr.getName().equals("")) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
