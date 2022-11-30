@@ -44,6 +44,17 @@ public class GenerateRecipeWithIngredients {
         recipeService.save(r1);
 
         Assertions.assertEquals(1, recipeService.count());
+        
+        Long r1_id = r1.getId();
+        Assertions.assertTrue(recipeService.existsById(r1_id),
+        		"A recipe by the id of r1 should exist, but it does not.");
+        
+        Recipe r1_found = recipeService.findById(r1_id);
+        Assertions.assertEquals(r1, r1_found,
+                "Finding a recipe by the id of r1 should have returned r1, but did not.");
+        Recipe r2_not_found = recipeService.findById(r1_id + 1);
+        Assertions.assertNull(r2_not_found,
+        		"Finding a recipe by the id of one greater than that of r1 should have returned null, but did not.");
 
         printRecipes();
     }

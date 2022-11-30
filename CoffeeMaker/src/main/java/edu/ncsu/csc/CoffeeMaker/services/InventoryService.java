@@ -9,9 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The InventoryService is used to handle CRUD operations on the Inventory
@@ -75,52 +73,52 @@ public class InventoryService extends Service<Inventory, Long> {
         super.save(i);
     }
 
-    /**
-     * Saves all the inventories and their ingredients to the database
-     * @param objects
-     *            A List of inventories to save to the database.
-     */
-    @Override
-    public void saveAll(List<Inventory> objects) {
-        for (Inventory i : objects) {
-            ingredientRepository.saveAll(i.getIngredients().keySet());
-        }
-
-        super.saveAll(objects);
-    }
-
-    /**
-     * Deletes an inventory and all of its ingredients from the database
-     * @param i
-     *            The inventory to delete from the database.
-     */
-    @Override
-    public void delete(Inventory i) {
-        Set<Ingredient> ingredients = i.getIngredients().keySet();
-        super.delete(i);
-
-        for (Ingredient ingredient : ingredients) {
-            ingredientRepository.delete(ingredient);
-        }
-    }
-
-    /**
-     * Deletes all inventories and their ingredients from the database
-     */
-    @Override
-    public void deleteAll() {
-        List<Inventory> inventories = inventoryRepository.findAll();
-        Set<Set<Ingredient>> ingredients = new HashSet<>();
-        for (Inventory inventory : inventories) {
-            ingredients.add(inventory.getIngredients().keySet());
-        }
-        super.deleteAll();
-
-        for (Set<Ingredient> ingredientSet : ingredients) {
-            for (Ingredient i : ingredientSet) {
-                ingredientRepository.delete(i);
-            }
-        }
-    }
-
+//    /**
+//     * Saves all the inventories and their ingredients to the database
+//     * @param objects
+//     *            A List of inventories to save to the database.
+//     */
+//    @Override
+//    public void saveAll(List<Inventory> objects) {
+//        for (Inventory i : objects) {
+//            ingredientRepository.saveAll(i.getIngredients().keySet());
+//        }
+//
+//        super.saveAll(objects);
+//    }
+//
+//    /**
+//     * Deletes an inventory and all of its ingredients from the database
+//     * @param i
+//     *            The inventory to delete from the database.
+//     */
+//    @Override
+//    public void delete(Inventory i) {
+//        Set<Ingredient> ingredients = i.getIngredients().keySet();
+//        super.delete(i);
+//
+//        for (Ingredient ingredient : ingredients) {
+//            ingredientRepository.delete(ingredient);
+//        }
+//    }
+//
+//    /**
+//     * Deletes all inventories and their ingredients from the database
+//     */
+//    @Override
+//    public void deleteAll() {
+//        List<Inventory> inventories = inventoryRepository.findAll();
+//        Set<Set<Ingredient>> ingredients = new HashSet<>();
+//        for (Inventory inventory : inventories) {
+//            ingredients.add(inventory.getIngredients().keySet());
+//        }
+//        super.deleteAll();
+//
+//        for (Set<Ingredient> ingredientSet : ingredients) {
+//            for (Ingredient i : ingredientSet) {
+//                ingredientRepository.delete(i);
+//            }
+//        }
+//    }
+//
 }
