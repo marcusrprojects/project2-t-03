@@ -34,15 +34,22 @@ public class APIIngredientController extends APIController {
      */
     @Autowired
     private IngredientService ingredientService;
-
+    
     /**
      * REST API method to provide GET access to all ingredients in the system
      *
      * @return JSON representation of all ingredients
      */
-    @GetMapping(BASE_PATH + "/ingredients")
-    public List<Ingredient> getIngredients() {
-        return ingredientService.findAll();
+    @GetMapping(BASE_PATH + "ingredients")
+    public ResponseEntity getIngredients() {
+
+        final List<Ingredient> ingr = ingredientService.findAll();
+
+        if (null == ingr) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(ingr, HttpStatus.OK);
     }
 
     /**
@@ -55,7 +62,7 @@ public class APIIngredientController extends APIController {
 
         final Ingredient ingr = ingredientService.findByName(name);
 
-        if (null == ingr) {
+        if (ingr.getName() == null || ingr.getName() == "") {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
