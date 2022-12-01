@@ -68,15 +68,23 @@ public class APIIngredientController extends APIController {
      * to update an Ingredient by automatically converting the JSON RequestBody
      * provided to an Ingredient object. Invalid JSON will fail.
      *
-     * @param ingredient The valid Ingredient to be updated.
+     * @param name the name of the Ingredient to update
+     * @param ingredient The valid Ingredient to be updated with
      * @return ResponseEntity indicating success if the Ingredient could be saved to
      * the inventory, or an error if it could not be
      */
-    @PutMapping(BASE_PATH + "/ingredients")
-    public ResponseEntity updateIngredient(@RequestBody final Ingredient ingredient) {
+    @PutMapping(BASE_PATH + "/ingredients/{name}")
+    public ResponseEntity updateIngredient(@PathVariable final String name, @RequestBody final Ingredient ingredient) {
+        Ingredient oldIngredient = ingredientService.findByName(name);
 
-        ingredientService.save(ingredient);
-        return new ResponseEntity(successResponse(ingredient.toString() + " successfully created"), HttpStatus.OK);
+        if (oldIngredient == null) {
+            return new ResponseEntity(errorResponse("No ingredient found with name " + name), HttpStatus.NOT_FOUND);
+        }
+
+        oldIngredient.setName(ingredient.getName());
+
+        ingredientService.save(oldIngredient);
+        return new ResponseEntity(successResponse(oldIngredient + " successfully updated"), HttpStatus.OK);
     }
 
     /**
