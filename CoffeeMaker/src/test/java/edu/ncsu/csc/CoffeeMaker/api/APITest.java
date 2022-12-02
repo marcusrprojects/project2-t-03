@@ -98,18 +98,13 @@ public class APITest {
 	@Transactional
 	public void testIngredient() throws Exception {
 		
-		Ingredient ingredient1 = new Ingredient();
-		ingredient1.setName("Vanilla");
+		Ingredient ingredient1 = new Ingredient("Vanilla");
 		
-		Ingredient ingredient2 = new Ingredient();
-		ingredient2.setName("Cheese");
+		Ingredient ingredient2 = new Ingredient("Cheese");
 		
-		Ingredient ingredient3 = new Ingredient();
-		
-		List<Ingredient> ingList = new ArrayList<>();
-		
-		ingList.add(ingredient1);
-		ingList.add(ingredient2);
+		Ingredient ingredient3 = new Ingredient("Chocolate");
+
+		Ingredient ingredient4 = new Ingredient("Oatmeal");
 		
 		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
@@ -117,17 +112,20 @@ public class APITest {
 		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient2))).andExpect(status().isOk());
 		
-		mvc.perform(get("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
-				.content(TestUtils.asJsonString(ingList))).andExpect(status().isOk());
+		mvc.perform(get("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 		
 		mvc.perform(get("/api/v1/ingredients/Vanilla").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
 				
-		mvc.perform(delete("/api/v1/ingredients/Vanilla").contentType(MediaType.APPLICATION_JSON)
-				.content(TestUtils.asJsonString(ingList))).andExpect(status().isOk());
+		mvc.perform(delete("/api/v1/ingredients/Vanilla").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 		
-		mvc.perform(put("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
-				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
+		mvc.perform(put("/api/v1/ingredients/Cheese").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient4))).andExpect(status().isOk());
+
+		mvc.perform(get("/api/v1/ingredients/Oatmeal").contentType(MediaType.APPLICATION_JSON))
+						.andExpect(status().isOk());
 		
 		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient3))).andExpect(status().isOk());
