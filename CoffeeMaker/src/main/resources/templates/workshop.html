@@ -15,7 +15,7 @@
                 console.log($scope)
 
                 $scope.onPress = function() {
-                    alert("Thanks for pressing me.")
+                    alert("Your input: " + $scope.inputText)
                 }
 
             });
@@ -28,6 +28,7 @@
 
         <!--- Various HTML elements, with extra tags telling Angular how to work with them, go here -->
         <button ng-click="onPress()">Press Me!</button>
+        <input type="text" ng-model="inputText"/>
     </div>
 
 </div>
