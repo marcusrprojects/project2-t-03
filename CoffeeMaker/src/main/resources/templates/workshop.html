@@ -15,7 +15,8 @@
                 console.log($scope);
 
                 $scope.onPress = function() {
-                    alert("Your input: " + $scope.input1)
+                    alert("Your input: " + $scope.input1);
+                    console.log($scope);
                 }
 
                 $scope.interweave = function(a, b) {
@@ -44,6 +45,38 @@
                     return newString;
                 }
 
+                $scope.selectOptions = [
+				    "Coffee",
+                    "Chocolate",
+                    "Sugar",
+                    "Milk",
+                    "Oat Milk",
+                    "Whipped Cream",
+                    "Vanilla"
+    		    ];
+
+    		    $scope.teamMembers = [
+    		        "Ben",
+    		        "Cheng",
+    		        "Marcus",
+    		        "Darien"
+    		    ];
+
+    		    $scope.selectedMembers = {
+    		        "Ben": true,
+    		        "Cheng": true,
+    		        "Marcus": true,
+    		        "Darien": true
+    		    }
+
+    		    $scope.rude = function(selected) {
+    		        if (!selected) {
+    		            return "Well, that's rude!";
+    		        } else {
+    		            return "";
+    		        }
+    		    }
+
             });
 
             /* Without these comments, Thymeleaf will try to parse the Javascript as XML and break itself sometimes */
@@ -57,6 +90,19 @@
         <input type="text" ng-model="input1"/>
         <input type="text" ng-model="input2"/>
         <p>Your interwoven input is: {{interweave(input1, input2)}}</p>
+        <div class="col-sm">
+            Select an ingredient:<br/>
+            <select ng-model="selection" ng-options="item for item in selectOptions"></select>
+        </div>
+        <div class="col-sm">
+            Select the best teammates:<br/>
+            <div ng-repeat="member in teamMembers track by $index">
+                <input type="checkbox"
+                       ng-model="$parent.selectedMembers[member]">
+                <tt>{{member}} {{rude($parent.selectedMembers[member])}}</tt>
+                </input>
+            </div>
+        </div>
     </div>
 
 </div>
