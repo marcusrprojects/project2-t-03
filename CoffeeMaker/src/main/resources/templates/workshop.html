@@ -12,10 +12,36 @@
 
                 /* Logic that handles controlling your page goes here */
 
-                console.log($scope)
+                console.log($scope);
 
                 $scope.onPress = function() {
-                    alert("Your input: " + $scope.inputText)
+                    alert("Your input: " + $scope.input1)
+                }
+
+                $scope.interweave = function(a, b) {
+                    if (typeof a === "undefined") {
+                        return b;
+                    } else if (typeof b === "undefined") {
+                        return a;
+                    } else if (typeof a === "undefined" && typeof b === "undefined") {
+                        return "";
+                    }
+
+
+                    shorterLength = Math.min(a.length, b.length);
+                    newString = "";
+                    for (let i = 0; i < shorterLength; i++) {
+                        newString += a.charAt(i);
+                        newString += b.charAt(i);
+                    }
+
+                    if (a.length > b.length) {
+                        newString += a.slice(b.length - 1, a.length);
+                    } else if (b.length > a.length) {
+                        newString += b.slice(a.length - 1, b.length);
+                    }
+
+                    return newString;
                 }
 
             });
@@ -28,7 +54,9 @@
 
         <!--- Various HTML elements, with extra tags telling Angular how to work with them, go here -->
         <button ng-click="onPress()">Press Me!</button>
-        <input type="text" ng-model="inputText"/>
+        <input type="text" ng-model="input1"/>
+        <input type="text" ng-model="input2"/>
+        <p>Your interwoven input is: {{interweave(input1, input2)}}</p>
     </div>
 
 </div>
