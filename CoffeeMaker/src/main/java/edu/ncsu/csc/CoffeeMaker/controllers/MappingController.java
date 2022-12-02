@@ -120,4 +120,17 @@ public class MappingController {
         return "makecoffee";
     }
 
+    /**
+     * On a GET request to /workshop, the MakeCoffeeController will return
+     * /src/main/resources/templates/workshop.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/workshop", "/workshop.html" } )
+    public String workshopPage ( final Model model ) {
+        return "workshop";
+    }
+
 }
