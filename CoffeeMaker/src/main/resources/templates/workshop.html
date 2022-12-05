@@ -17,7 +17,7 @@
                 $scope.onPress = function() {
                     alert("Your input: " + $scope.input1);
                     console.log($scope);
-                }
+                };
 
                 $scope.interweave = function(a, b) {
                     if (typeof a === "undefined") {
@@ -43,7 +43,7 @@
                     }
 
                     return newString;
-                }
+                };
 
                 $scope.selectOptions = [
 				    "Coffee",
@@ -67,7 +67,7 @@
     		        "Cheng": true,
     		        "Marcus": true,
     		        "Darien": true
-    		    }
+    		    };
 
     		    $scope.rude = function(selected) {
     		        if (!selected) {
@@ -75,7 +75,20 @@
     		        } else {
     		            return "";
     		        }
-    		    }
+    		    };
+
+    		    $scope.foods = {
+                    "Pizza":
+                        [
+                            {"restaurant": "Dominos"},
+                            {"restaurant": "Portland Pie"}
+                        ],
+                    "Ice Cream":
+                        [
+                            {"restaurant": "Gelato Fiasco"},
+                            {"restaurant": "Coldstone Creamery"}
+                        ]
+                };
 
             });
 
@@ -102,6 +115,12 @@
                 <tt>{{member}} {{rude($parent.selectedMembers[member])}}</tt>
                 </input>
             </div>
+        </div>
+        <div ng-repeat="(food, ingredients) in foods track by $index">
+            Restaraunts for {{food}}:
+            <ul id="{{food}}">
+                <li ng-repeat="ingredient in ingredients">{{ingredient.restaurant}}</li>
+            </ul>
         </div>
     </div>
 
