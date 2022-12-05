@@ -11,9 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 /**
  *
@@ -41,9 +49,15 @@ public class APIIngredientController extends APIController {
      * @return JSON representation of all ingredients
      */
     @GetMapping(BASE_PATH + "ingredients")
-    public List<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients(@RequestParam(required = false) boolean unique) {
 
-        return ingredientService.findAll();
+        if (unique) {
+            return ingredientService.findAll().stream().collect(collectingAndThen(
+                    toCollection(() -> new TreeSet<>(Comparator.comparing(Ingredient::getName))),
+                    ArrayList::new));
+        } else {
+            return ingredientService.findAll();
+        }
     }
 
     /**
