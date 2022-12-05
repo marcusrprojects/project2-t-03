@@ -94,10 +94,13 @@ input.ng-dirty.ng-invalid-min {
 			}
 
 			$scope.populateIngredients = function() {
-				console.log($scope.selectOptions)
 				for (let i = 0; i < $scope.selectOptions.length; i++) {
 					$scope.recipe.ingredients[$scope.selectOptions[i].name] = ""
 				}
+			}
+
+			$scope.changeValue = function() {
+				console.log($scope)
 			}
 
   			$scope.getIngredients();
@@ -164,18 +167,18 @@ input.ng-dirty.ng-invalid-min {
 						<div class="form-group col-md-12">
 							<label class="col-md-12 control-lable" for="file">
 								<ul class="list-group">
-									<li class="list-group-item" id="ingredient-list-element" data-ng-repeat="(ingredient, amount) in recipe.ingredients">
+									<li class="row list-group-item" id="ingredient-list-element" data-ng-repeat="(ingredient, amount) in recipe.ingredients">
 										<div class="col-md-2">
 											{{ingredient}}
 										</div>
 										<div class="col-md-7">
-											<input class="form-control" type="number" ng-model="recipe.ingredients[ingredient]" name="amount"
-												   placeholder="Enter ingredient amount" required min="0"/>
+											<input class="form-control" type="number" ng-model="recipe.ingredients[ingredient]" name="{{ingredient}}"
+												   placeholder="Enter ingredient amount" required min="0" ng-change="changeValue()"/>
 											<div class="has-error" ng-show="addRecipeForm.$dirty">
-												<span ng-show="addRecipeForm.recipe.ingredients.ingredient.$error.required">This
+												<span ng-show="addRecipeForm.{{ingredient}}.$error.required">This
 													is a required field.</span> <span
-													ng-show="addRecipeForm.recipe.ingredients.ingredient.$error.min">Minimum amount
-													is 0.</span> <span ng-show="addRecipeForm.recipe.ingredients.ingredient.$invalid">This
+													ng-show="addRecipeForm.{{ingredient}}.$error.min">Minimum amount
+													is 0.</span> <span ng-show="addRecipeForm.{{ingredient}}.$invalid">This
 													field is invalid.</span>
 											</div>
 										</div>
