@@ -49,7 +49,7 @@ public class InventoryService extends Service<Inventory, Long> {
      */
     public synchronized Inventory getInventory() {
         final List<Inventory> inventoryList = findAll();
-        if (inventoryList != null && inventoryList.size() == 1) {
+        if (inventoryList != null && inventoryList.size() >= 1) {
             return inventoryList.get(0);
         } else {
             // initialize the inventory with 0 of everything
