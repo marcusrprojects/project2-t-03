@@ -1,6 +1,5 @@
 package edu.ncsu.csc.CoffeeMaker;
 
-import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

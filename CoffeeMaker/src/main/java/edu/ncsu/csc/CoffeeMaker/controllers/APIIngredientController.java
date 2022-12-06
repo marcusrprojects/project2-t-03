@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
@@ -46,6 +45,7 @@ public class APIIngredientController extends APIController {
     /**
      * REST API method to provide GET access to all ingredients in the system
      *
+     * @param unique whether or not the returned list should only include unique ingredients by name
      * @return JSON representation of all ingredients
      */
     @GetMapping(BASE_PATH + "ingredients")
