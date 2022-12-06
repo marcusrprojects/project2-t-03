@@ -112,6 +112,10 @@ public class APIIngredientController extends APIController {
      */
     @PostMapping(BASE_PATH + "/ingredients")
     public ResponseEntity createIngredient(@RequestBody final Ingredient ingredient) {
+/*    	if ( null != ingredientService.findByName( ingredient.getName() ) ) {
+            return new ResponseEntity( errorResponse( "Ingredient with the name " + ingredient.getName() + " already exists" ),
+                    HttpStatus.CONFLICT );
+        }*/
 
         ingredientService.save(ingredient);
         return new ResponseEntity(successResponse(ingredient.toString() + " successfully created"), HttpStatus.OK);
