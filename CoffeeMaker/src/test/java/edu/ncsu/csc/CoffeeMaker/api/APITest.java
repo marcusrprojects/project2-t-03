@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
@@ -105,6 +106,8 @@ public class APITest {
 		Ingredient ingredient3 = new Ingredient("Chocolate");
 
 		Ingredient ingredient4 = new Ingredient("Oatmeal");
+
+		Ingredient ingredient5 = new Ingredient("Oatmeal");
 		
 		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
@@ -129,6 +132,14 @@ public class APITest {
 		
 		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient3))).andExpect(status().isOk());
+
+		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(ingredient5))).andExpect(status().isOk());
+
+		String content = mvc.perform(get("/api/v1/ingredients?unique=true").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+		Assertions.assertEquals(1, StringUtils.countOccurrencesOf(content, "Oatmeal"), "Duplicate ingredient names should not be included.");
 	}
 
 	@Test
