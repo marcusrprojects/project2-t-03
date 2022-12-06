@@ -63,7 +63,10 @@ input.ng-dirty.ng-invalid-min {
 							$scope.success = true;
 							$scope.failure = false;
 						}, function(rejection) {
+							$scope.failure = true;
+							$scope.success = false;
 							console.error("Error while adding ingredient");
+							return;
 						});
 				inventory = {
 					ingredients: {
