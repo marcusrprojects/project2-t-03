@@ -76,6 +76,12 @@ public class APIRecipeController extends APIController {
 			return new ResponseEntity(errorResponse("Recipe with the name " + recipe.getName() + " already exists"),
 					HttpStatus.CONFLICT);
 		}
+
+		if (recipe.getIngredients().isEmpty()) {
+			return new ResponseEntity(errorResponse("Recipe must have at least one ingredient"),
+					HttpStatus.PRECONDITION_FAILED);
+		}
+
 		if (service.findAll().size() < 3) {
 			service.save(recipe);
 			return new ResponseEntity(successResponse(recipe.getName() + " successfully created"), HttpStatus.OK);
