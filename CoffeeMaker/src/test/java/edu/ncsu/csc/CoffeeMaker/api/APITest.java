@@ -108,7 +108,16 @@ public class APITest {
 		Ingredient ingredient4 = new Ingredient("Oatmeal");
 
 		Ingredient ingredient5 = new Ingredient("Oatmeal");
-		
+
+		Inventory inventory = new Inventory();
+		Map<Ingredient, Integer> ingredients = new HashMap<>();
+		ingredients.put(ingredient1, 50);
+		ingredients.put(ingredient2, 50);
+		ingredients.put(ingredient3, 50);
+		ingredients.put(ingredient4, 50);
+
+		inventory.addIngredients(ingredients);
+
 		mvc.perform(post("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(ingredient1))).andExpect(status().isOk());
 		
@@ -139,6 +148,9 @@ public class APITest {
 		mvc.perform(post("/api/v1/recipes").contentType(MediaType.APPLICATION_JSON)
 				.content(TestUtils.asJsonString(duplicateIngredient))).andExpect(status().isOk());
 
+		mvc.perform(put("/api/v1/inventory").contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtils.asJsonString(inventory))).andExpect(status().isOk());
+
 		String content = mvc.perform(get("/api/v1/ingredients?unique=true").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
@@ -147,7 +159,7 @@ public class APITest {
 		String contentNonUnique = mvc.perform(get("/api/v1/ingredients").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-		Assertions.assertEquals(2, StringUtils.countOccurrencesOf(contentNonUnique, "Oatmeal"), "Duplicate ingredient names should be included.");
+		Assertions.assertEquals(3, StringUtils.countOccurrencesOf(contentNonUnique, "Oatmeal"), "Duplicate ingredient names should be included.");
 	}
 
 	@Test

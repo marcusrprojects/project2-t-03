@@ -2,6 +2,7 @@ package edu.ncsu.csc.CoffeeMaker.controllers;
 
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.services.IngredientService;
+import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
-
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
 
 /**
  *
@@ -41,6 +37,13 @@ public class APIIngredientController extends APIController {
      */
     @Autowired
     private IngredientService ingredientService;
+
+    /**
+     * InventoryService object, to be autowired in by Spring to allow for
+     * manipulating the Inventory model
+     */
+    @Autowired
+    private InventoryService inventoryService;
     
     /**
      * REST API method to provide GET access to all ingredients in the system
@@ -50,11 +53,8 @@ public class APIIngredientController extends APIController {
      */
     @GetMapping(BASE_PATH + "ingredients")
     public List<Ingredient> getIngredients(@RequestParam(required = false) boolean unique) {
-
         if (unique) {
-            return ingredientService.findAll().stream().collect(collectingAndThen(
-                    toCollection(() -> new TreeSet<>(Comparator.comparing(Ingredient::getName))),
-                    ArrayList::new));
+            return new ArrayList<>(inventoryService.getInventory().getIngredients().keySet());
         } else {
             return ingredientService.findAll();
         }
