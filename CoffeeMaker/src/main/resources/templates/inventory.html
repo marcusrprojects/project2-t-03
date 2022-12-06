@@ -116,7 +116,7 @@ input.ng-dirty.ng-invalid-min {
 							<div class="col-md-7">
 								<input type="number" ng-model="inventory.ingredients[ingredient]" name="{{ingredient}}"
 									class="form-control input-sm"
-									placeholder="Enter Initial Amount" required="0" min="0"/>
+									placeholder="Enter amount to add" required="0" min="0"/>
 								<div class="has-error" ng-show="addInventoryForm.$dirty">
 									<span ng-show="addInventoryForm.{{ingredient}}.$error.required">This
 										is a required field.</span> <span
