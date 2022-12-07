@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,29 +37,25 @@ public class RecipeTest {
     public void testAddRecipe () {
 
         final Recipe r1 = new Recipe();
-        r1.setName( "Black Coffee" );
-        r1.setPrice( 1 );
-        r1.setCoffee( 1 );
-        r1.setMilk( 0 );
-        r1.setSugar( 0 );
-        r1.setChocolate( 0 );
-        service.save( r1 );
+        r1.setName("Black Coffee");
+        r1.setPrice(1);
+        r1.addIngredient(new Ingredient("Coffee"), 1);
+        service.save(r1);
 
         final Recipe r2 = new Recipe();
-        r2.setName( "Mocha" );
-        r2.setPrice( 1 );
-        r2.setCoffee( 1 );
-        r2.setMilk( 1 );
-        r2.setSugar( 1 );
-        r2.setChocolate( 1 );
-        service.save( r2 );
+        r2.setName("Mocha");
+        r2.setPrice(1);
+        r2.addIngredient(new Ingredient("Coffee"), 1);
+        r2.addIngredient(new Ingredient("Milk"), 1);
+        r2.addIngredient(new Ingredient("Sugar"), 1);
+        r2.addIngredient(new Ingredient("Chocolate"), 1);
+        service.save(r2);
 
         final List<Recipe> recipes = service.findAll();
         Assertions.assertEquals( 2, recipes.size(),
                 "Creating two recipes should result in two recipes in the database" );
 
         Assertions.assertEquals( r1, recipes.get( 0 ), "The retrieved recipe should match the created one" );
-        Assertions.assertEquals( false, r1.checkRecipe());
     }
 
     @Test
@@ -67,20 +64,17 @@ public class RecipeTest {
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Recipes in the CoffeeMaker" );
 
         final Recipe r1 = new Recipe();
-        r1.setName( "Tasty Drink" );
-        r1.setPrice( 12 );
-        r1.setCoffee( -12 );
-        r1.setMilk( 0 );
-        r1.setSugar( 0 );
-        r1.setChocolate( 0 );
+        r1.setName("Tasty Drink");
+        r1.setPrice(12);
+        r1.addIngredient(new Ingredient("Coffee"), -12);
 
         final Recipe r2 = new Recipe();
-        r2.setName( "Mocha" );
-        r2.setPrice( 1 );
-        r2.setCoffee( 1 );
-        r2.setMilk( 1 );
-        r2.setSugar( 1 );
-        r2.setChocolate( 1 );
+        r2.setName("Mocha");
+        r2.setPrice(1);
+        r2.addIngredient(new Ingredient("Coffee"), 1);
+        r2.addIngredient(new Ingredient("Milk"), 1);
+        r2.addIngredient(new Ingredient("Sugar"), 1);
+        r2.addIngredient(new Ingredient("Chocolate"), 1);
 
         final List<Recipe> recipes = List.of( r1, r2 );
 
@@ -272,49 +266,42 @@ public class RecipeTest {
         Assertions.assertEquals( 0, service.count(), "`service.deleteAll()` should remove everything" );
 
     }
-    
+
     @Test
     @Transactional
     public void testUpdateRecipe() {
-
-    	final Recipe r1 = new Recipe();
-        r1.setName( "Black Coffee" );
-        r1.setPrice( 1 );
-        r1.setCoffee( 1 );
-        r1.setMilk( 0 );
-        r1.setSugar( 0 );
-        r1.setChocolate( 0 );
-        service.save( r1 );
-
-        Assertions.assertFalse(r1.checkRecipe(), "Recipe ingredient fields should not all be 0.");
+        final Recipe r1 = new Recipe();
+        r1.setName("Black Coffee");
+        r1.setPrice(1);
+        r1.addIngredient(new Ingredient("Coffee"), 1);
+        service.save(r1);
 
         final Recipe r2 = new Recipe();
-        r2.setName( "Mocha" );
-        r2.setPrice( 1 );
-        r2.setCoffee( 1 );
-        r2.setMilk( 1 );
-        r2.setSugar( 1 );
-        r2.setChocolate( 1 );
-        service.save( r2 );
+        r2.setName("Mocha");
+        r2.setPrice(1);
+        r2.addIngredient(new Ingredient("Coffee"), 1);
+        r2.addIngredient(new Ingredient("Milk"), 1);
+        r2.addIngredient(new Ingredient("Sugar"), 1);
+        r2.addIngredient(new Ingredient("Chocolate"), 1);
+        service.save(r2);
 
         r1.updateRecipe(r2);
 
-        Assertions.assertEquals(1,r1.getChocolate());
+        for (Integer ingredientAmt : r1.getIngredients().values()) {
+                Assertions.assertEquals(1, ingredientAmt);
+        }
 
-        Assertions.assertEquals("Black Coffee", r1.toString());
+        Assertions.assertEquals("Black Coffee, Ingredients: {\nChocolate: 1\nCoffee: 1\nMilk: 1\nSugar: 1\n}", r1.toString());
 
         r1.setName("Mocha");
 
+        service.save(r1);
         Assertions.assertTrue(r1.equals(r2));
-
         final List<Recipe> recipes = service.findAll();
-        Assertions.assertEquals( 2, recipes.size(),
-                "Creating two recipes should result in two recipes in the database" );
-
-        Assertions.assertEquals( r1, recipes.get( 0 ), "The retrieved recipe should match the created one" );
-
-
-    }
+        Assertions.assertEquals(2, recipes.size(),
+                    "Creating two recipes should result in two recipes in the database");
+        Assertions.assertEquals(r1, recipes.get(0), "The retrieved recipe should match the created one");
+        }
 
     @Test
     @Transactional
@@ -328,49 +315,43 @@ public class RecipeTest {
 
         service.save( r1 );
 
-        final Recipe retrieved = service.findByName( "Coffee" );
+        final Recipe retrieved = service.findByName("Coffee");
 
-        Assertions.assertEquals( 70, (int) retrieved.getPrice() );
-        Assertions.assertEquals( 3, (int) retrieved.getCoffee() );
-        Assertions.assertEquals( 1, (int) retrieved.getMilk() );
-        Assertions.assertEquals( 1, (int) retrieved.getSugar() );
-        Assertions.assertEquals( 0, (int) retrieved.getChocolate() );
+        Assertions.assertEquals(70, (int) retrieved.getPrice());
+        Assertions.assertEquals(3, (int) retrieved.getIngredient("Coffee").getValue());
+        Assertions.assertEquals(1, (int) retrieved.getIngredient("Milk").getValue());
+        Assertions.assertEquals(1, (int) retrieved.getIngredient("Sugar").getValue());
 
-        Assertions.assertEquals( 1, service.count(), "Editing a recipe shouldn't duplicate it" );
+        Assertions.assertEquals(1, service.count(), "Editing a recipe shouldn't duplicate it");
         
         
         final Recipe r2 = new Recipe();
-        r2.setName( "Mocha" );
-        r2.setPrice( 3 );
-        r2.setCoffee( 3 );
-        r2.setMilk( 1 );
-        r2.setSugar( 1 );
-        r2.setChocolate( 1 );
-        service.save( r2 );
+        r2.setName("Mocha");
+        r2.setPrice(3);
+        r2.addIngredient(new Ingredient("Coffee"), 3);
+        r2.addIngredient(new Ingredient("Milk"), 1);
+        r2.addIngredient(new Ingredient("Sugar"), 1);
+        r2.addIngredient(new Ingredient("Chocolate"), 1);
+        service.save(r2);
         r1.updateRecipe(r2);
-        
-        Assertions.assertEquals( 3, (int) retrieved.getPrice() );
-        Assertions.assertEquals( 3, (int) retrieved.getCoffee() );
-        Assertions.assertEquals( 1, (int) retrieved.getMilk() );
-        Assertions.assertEquals( 1, (int) retrieved.getSugar() );
-        Assertions.assertEquals( 1, (int) retrieved.getChocolate() );
-        
-        
-        
-        
- 
+
+        Assertions.assertEquals(3, (int) retrieved.getPrice());
+        Assertions.assertEquals(3, (int) retrieved.getIngredient("Coffee").getValue());
+        Assertions.assertEquals(1, (int) retrieved.getIngredient("Milk").getValue());
+        Assertions.assertEquals(1, (int) retrieved.getIngredient("Sugar").getValue());
+        Assertions.assertEquals(1, (int) retrieved.getIngredient("Chocolate").getValue());
 
     }
 
     private Recipe createRecipe ( final String name, final Integer price, final Integer coffee, final Integer milk,
             final Integer sugar, final Integer chocolate ) {
         final Recipe recipe = new Recipe();
-        recipe.setName( name );
-        recipe.setPrice( price );
-        recipe.setCoffee( coffee );
-        recipe.setMilk( milk );
-        recipe.setSugar( sugar );
-        recipe.setChocolate( chocolate );
+        recipe.setName(name);
+        recipe.setPrice(price);
+        recipe.addIngredient(new Ingredient("Coffee"), coffee);
+        recipe.addIngredient(new Ingredient("Milk"), milk);
+        recipe.addIngredient(new Ingredient("Sugar"), sugar);
+        recipe.addIngredient(new Ingredient("Chocolate"), chocolate);
 
         return recipe;
     }

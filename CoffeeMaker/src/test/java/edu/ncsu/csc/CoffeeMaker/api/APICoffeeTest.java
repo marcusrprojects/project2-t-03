@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.transaction.Transactional;
 
+import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,21 +45,21 @@ public class APICoffeeTest {
 
         final Inventory ivt = iService.getInventory();
 
-        ivt.setChocolate( 15 );
-        ivt.setCoffee( 15 );
-        ivt.setMilk( 15 );
-        ivt.setSugar( 15 );
+        ivt.setIngredient("Chocolate", 15);
+        ivt.setIngredient("Coffee", 15);
+        ivt.setIngredient("Milk", 15);
+        ivt.setIngredient("Sugar", 15);
 
         iService.save( ivt );
 
         final Recipe recipe = new Recipe();
-        recipe.setName( "Coffee" );
-        recipe.setPrice( 50 );
-        recipe.setCoffee( 3 );
-        recipe.setMilk( 1 );
-        recipe.setSugar( 1 );
-        recipe.setChocolate( 0 );
-        service.save( recipe );
+        recipe.setName("Coffee");
+        recipe.setPrice(50);
+        recipe.addIngredient(new Ingredient("Coffee"), 3);
+        recipe.addIngredient(new Ingredient("Milk"), 1);
+        recipe.addIngredient(new Ingredient("Sugar"), 1);
+        recipe.addIngredient(new Ingredient("Chocolate"), 0);
+        service.save(recipe);
     }
 
     @Test
@@ -92,8 +93,8 @@ public class APICoffeeTest {
         /* Insufficient inventory */
 
         final Inventory ivt = iService.getInventory();
-        ivt.setCoffee( 0 );
-        iService.save( ivt );
+        ivt.setIngredient("Coffee", 0);
+        iService.save(ivt);
 
         final String name = "Coffee";
 
