@@ -55,6 +55,7 @@ input.ng-dirty.ng-invalid-min {
 			}
 
 			$scope.addIngredient = function() {
+				ingredientCopy = angular.copy($scope.ingredient);
 				$scope.success = false;
 				$scope.failure = false;
 
@@ -71,11 +72,13 @@ input.ng-dirty.ng-invalid-min {
 							if ($scope.failure) {
 								return;
 							} else {
+
 								inventory = {
 									ingredients: {
 									}
 								}
-								inventory.ingredients[$scope.ingredient.name] = $scope.ingredient.unit;
+
+								inventory.ingredients[ingredientCopy.name] = ingredientCopy.unit;
 
 								$http.put("/api/v1/inventory", inventory).then(
 										function(response) {
