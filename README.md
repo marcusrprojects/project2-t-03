@@ -1,5 +1,9 @@
 # Coffee Maker Application
 
+[![Language](https://img.shields.io/badge/Language-Java-blue.svg)]()
+[![Framework](https://img.shields.io/badge/Framework-Spring_Boot-green.svg)]()
+[![Build Tool](https://img.shields.io/badge/Build-Maven-red.svg)]()
+
 This project was a collaboration between 4 individuals with its work broken into a weekly team portion and a weekly individual portion (separate from the team portion). This repository reflects the weekly team portion. To see the weekly team portions, please follow this link: [Individual Portion of Coffee Maker Project](https://github.com/marcusrprojects/project2-i-08/).
 Note that, necessarily, work from both the team portion is present in the individual repository and vice versa in order to make a functioning application.
 
